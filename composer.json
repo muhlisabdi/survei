@@ -10,10 +10,15 @@
     "repositories": [
             {
                 "type": "vcs",
+                "url": "https://github.com/muhlisabdi/laravel-admin"
+            },
+            {
+                "type": "vcs",
                 "url": "https://github.com/muhlisabdi/helpers"
             }
+        
         ],
-       "require": {
+    "require": {
         "php": "^7.2",
         "encore/laravel-admin": "dev-master",
         "fideloper/proxy": "^4.0",

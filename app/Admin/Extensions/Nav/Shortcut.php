@@ -15,7 +15,7 @@ class Shortcut implements Renderable
     public function __construct(array $links = [], $icon = 'fa-plus')
     {
         $this->links = collect($links);
-        $this->icon  = $icon;
+        $this->icon = $icon;
     }
 
     public static function make($links = [], $icon = '')
@@ -40,7 +40,6 @@ class Shortcut implements Renderable
     public function render()
     {
         $links = $this->links->map(function ($target, $title) {
-
             $link = admin_url($target);
 
             return "<li><a href='$link'>{$title}</a></li>";

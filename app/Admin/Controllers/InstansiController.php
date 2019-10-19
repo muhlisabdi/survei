@@ -19,6 +19,7 @@ class InstansiController extends Controller
      * Index interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function index(Content $content)
@@ -32,8 +33,9 @@ class InstansiController extends Controller
     /**
      * Show interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function show($id, Content $content)
@@ -47,8 +49,9 @@ class InstansiController extends Controller
     /**
      * Edit interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function edit($id, Content $content)
@@ -63,6 +66,7 @@ class InstansiController extends Controller
      * Create interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function create(Content $content)
@@ -80,21 +84,23 @@ class InstansiController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Instansi);
+        $grid = new Grid(new Instansi());
 
         $grid->nama('Nama Instansi')->sortable()->editable();
         $grid->layanan('Unit Layanan')->display(function ($layanan) {
             $count = count($layanan);
+
             return "{$count} Layanan";
         })->label('primary');
         $grid->kelompok()->display(function ($kelompok) {
             $kelompok = array_map(function ($grup) {
                 return "<span class='label label-success'>{$grup['nama']}</span>";
             }, $kelompok);
-            return join('&nbsp;', $kelompok);
+
+            return implode('&nbsp;', $kelompok);
         });
         $grid->filter(function ($filter) {
-            $filter->like('nama','Nama Instansi');
+            $filter->like('nama', 'Nama Instansi');
         });
 
         return $grid;
@@ -104,6 +110,7 @@ class InstansiController extends Controller
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -153,20 +160,21 @@ class InstansiController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Instansi);
+        $form = new Form(new Instansi());
 
-        if ($form->isEditing()){
-            $form->display('id','ID');
+        if ($form->isEditing()) {
+            $form->display('id', 'ID');
         }
-        $form->text('nama','Nama Instansi')->rules('required',['required'=>'Nama Instansi Harus Terisi']);
-        $form->textarea('alamat','Alamat Instansi')->rules('required',['required'=>'Alamat Instansi Harus Terisi'])->required();
-        $form->text('kota','Nama Kota')->rules('required',['required'=>'Nama Kota Harus Terisi'])->required();
-        $form->text('kepala','Nama Kepala')->rules('required',['required'=>'Nama Kepala Harus Terisi'])->required();
-        $form->text('nip','NIP Kepala')->rules('required',['required'=>'NIP Kepala Harus Terisi'])->required();
-        $form->multipleSelect('kelompok','Kelompok')->options(Kelompok::all()->pluck('nama', 'id'));
+        $form->text('nama', 'Nama Instansi')->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
+        $form->textarea('alamat', 'Alamat Instansi')->rules('required', ['required'=>'Alamat Instansi Harus Terisi'])->required();
+        $form->text('kota', 'Nama Kota')->rules('required', ['required'=>'Nama Kota Harus Terisi'])->required();
+        $form->text('kepala', 'Nama Kepala')->rules('required', ['required'=>'Nama Kepala Harus Terisi'])->required();
+        $form->text('nip', 'NIP Kepala')->rules('required', ['required'=>'NIP Kepala Harus Terisi'])->required();
+        $form->multipleSelect('kelompok', 'Kelompok')->options(Kelompok::all()->pluck('nama', 'id'));
         $form->hasMany('layanan', function (Form\NestedForm $form) {
-            $form->text('nama','Nama Layanan');
+            $form->text('nama', 'Nama Layanan');
         })->useTable();
+
         return $form;
     }
 }

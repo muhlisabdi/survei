@@ -8,7 +8,7 @@ class Dropdown implements Renderable
 {
     public function render()
     {
-        return <<<HTML
+        return <<<'HTML'
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-th"></i>
@@ -49,6 +49,5 @@ class Dropdown implements Renderable
     </ul>
 </li>
 HTML;
-
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Models\Layanan;
 use App\Admin\Models\Instansi;
+use App\Admin\Models\Layanan;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -20,6 +20,7 @@ class LayananController extends Controller
      * Index interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function index(Content $content)
@@ -33,8 +34,9 @@ class LayananController extends Controller
     /**
      * Show interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function show($id, Content $content)
@@ -48,8 +50,9 @@ class LayananController extends Controller
     /**
      * Edit interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function edit($id, Content $content)
@@ -64,6 +67,7 @@ class LayananController extends Controller
      * Create interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function create(Content $content)
@@ -81,12 +85,12 @@ class LayananController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Layanan);
+        $grid = new Grid(new Layanan());
         $grid->nama('Unit Layanan')->sortable()->editable();
         $grid->instansi()->nama('Nama Instansi')->sortable();
         $grid->filter(function ($filter) {
-            $filter->like('nama','Unit Layanan');
-            $filter->equal('instansi.id','Instansi')->select(Instansi::all()->pluck('nama', 'id'));
+            $filter->like('nama', 'Unit Layanan');
+            $filter->equal('instansi.id', 'Instansi')->select(Instansi::all()->pluck('nama', 'id'));
         });
 
         return $grid;
@@ -96,6 +100,7 @@ class LayananController extends Controller
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -111,7 +116,7 @@ class LayananController extends Controller
                 $tools->disableEdit();
                 $tools->disableList();
                 $tools->disableDelete();
-                });
+            });
         });
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
             return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
@@ -130,13 +135,13 @@ class LayananController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Layanan);
+        $form = new Form(new Layanan());
 
-        if ($form->isEditing()){
-            $form->display('id','ID');
+        if ($form->isEditing()) {
+            $form->display('id', 'ID');
         }
-        $form->text('nama','Nama Unit Layanan')->rules('required',['required'=>'Nama Layanan Harus Terisi']);
-        $form->select('instansi_id','Nama Instansi')->options(Instansi::all()->pluck('nama', 'id'))->rules('required',['required'=>'Nama Instansi Harus Terisi']);
+        $form->text('nama', 'Nama Unit Layanan')->rules('required', ['required'=>'Nama Layanan Harus Terisi']);
+        $form->select('instansi_id', 'Nama Instansi')->options(Instansi::all()->pluck('nama', 'id'))->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
 
         return $form;
     }

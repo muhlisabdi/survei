@@ -9,7 +9,6 @@ Route::group([
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
-
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->resource('kelompok', KelompokController::class);
     $router->resource('instansi', InstansiController::class);
@@ -21,5 +20,4 @@ Route::group([
     $router->resource('pekerjaan', PekerjaanController::class);
     $router->resource('periode', PeriodeController::class);
     $router->resource('token', TokenController::class);
-
 });

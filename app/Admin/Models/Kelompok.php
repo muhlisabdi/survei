@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kelompok extends Model
 {
     protected $table = 'kelompok';
+
     public function instansi()
     {
         return $this->belongsToMany(Instansi::class);

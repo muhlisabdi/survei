@@ -1,4 +1,6 @@
 # survei
+    
+<p align="center">
     <a href="https://travis-ci.org/muhlisabdi/survei">
         <img src="https://travis-ci.org/muhlisabdi/survei.svg?branch=master" alt="Build Status">
     </a>

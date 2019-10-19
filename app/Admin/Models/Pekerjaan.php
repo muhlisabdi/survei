@@ -8,4 +8,3 @@ class Pekerjaan extends Model
 {
     protected $table = 'pekerjaan';
 }
-

@@ -19,6 +19,7 @@ class JkController extends Controller
      * Index interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function index(Content $content)
@@ -32,8 +33,9 @@ class JkController extends Controller
     /**
      * Show interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function show($id, Content $content)
@@ -47,8 +49,9 @@ class JkController extends Controller
     /**
      * Edit interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function edit($id, Content $content)
@@ -63,6 +66,7 @@ class JkController extends Controller
      * Create interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function create(Content $content)
@@ -80,7 +84,7 @@ class JkController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Jk);
+        $grid = new Grid(new Jk());
 
         $grid->kode('Kode');
         $grid->keterangan('Keterangan')->editable();
@@ -94,6 +98,7 @@ class JkController extends Controller
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -108,6 +113,7 @@ class JkController extends Controller
         $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
             return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
         });
+
         return $show;
     }
 
@@ -118,16 +124,16 @@ class JkController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Jk);
-        if ($form->isEditing()){
+        $form = new Form(new Jk());
+        if ($form->isEditing()) {
             $form->display('kode', 'Kode');
         } else {
-            $form->number('kode','Kode')->rules('numeric|required|unique:jk,kode',[
-                'required'=>'Kode Harus Terisi',
-                'unique'=>'Kode Sudah Ada, Silakan buat kode yang lain'
+            $form->number('kode', 'Kode')->rules('numeric|required|unique:jk,kode', [
+                'required'=> 'Kode Harus Terisi',
+                'unique'  => 'Kode Sudah Ada, Silakan buat kode yang lain',
                 ]);
         }
-        $form->text('keterangan','Keterangan')->rules('required',['required'=>'Nama Keterangan Harus Terisi']);
+        $form->text('keterangan', 'Keterangan')->rules('required', ['required'=>'Nama Keterangan Harus Terisi']);
 
         return $form;
     }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Instansi extends Model
 {
     protected $table = 'instansi';
+
     public function kelompok(): BelongsToMany
     {
         return $this->belongsToMany(Kelompok::class);

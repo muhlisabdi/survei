@@ -6,7 +6,7 @@ class Links
 {
     public function __toString()
     {
-        return <<<HTML
+        return <<<'HTML'
 <li>
     <a href="#">
       <i class="fa fa-envelope-o"></i>

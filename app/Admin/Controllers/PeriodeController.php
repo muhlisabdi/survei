@@ -19,6 +19,7 @@ class PeriodeController extends Controller
      * Index interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function index(Content $content)
@@ -32,8 +33,9 @@ class PeriodeController extends Controller
     /**
      * Show interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function show($id, Content $content)
@@ -47,8 +49,9 @@ class PeriodeController extends Controller
     /**
      * Edit interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
+     *
      * @return Content
      */
     public function edit($id, Content $content)
@@ -63,6 +66,7 @@ class PeriodeController extends Controller
      * Create interface.
      *
      * @param Content $content
+     *
      * @return Content
      */
     public function create(Content $content)
@@ -80,12 +84,12 @@ class PeriodeController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Periode);
+        $grid = new Grid(new Periode());
         $grid->nama('Periode')->sortable()->editable();
         $grid->start('Awal');
         $grid->end('Akhir');
         $grid->filter(function ($filter) {
-            $filter->like('nama','Periode');
+            $filter->like('nama', 'Periode');
         });
 
         return $grid;
@@ -95,6 +99,7 @@ class PeriodeController extends Controller
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -122,13 +127,13 @@ class PeriodeController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Periode);
-        if ($form->isEditing()){
-            $form->display('id','ID');
+        $form = new Form(new Periode());
+        if ($form->isEditing()) {
+            $form->display('id', 'ID');
         }
-        $form->text('nama','Periode')->rules('required',['required'=>'Nama Periode Harus Terisi']);
-        $form->date('start','Awal')->rules('required',['required'=>'Tanggal awal harus terisi'])->required();
-        $form->date('end','Akhir')->rules('required',['required'=>'Tanggal akhir harus terisi'])->required();
+        $form->text('nama', 'Periode')->rules('required', ['required'=>'Nama Periode Harus Terisi']);
+        $form->date('start', 'Awal')->rules('required', ['required'=>'Tanggal awal harus terisi'])->required();
+        $form->date('end', 'Akhir')->rules('required', ['required'=>'Tanggal akhir harus terisi'])->required();
 
         return $form;
     }

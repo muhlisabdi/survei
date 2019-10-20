@@ -21,7 +21,7 @@ class Instansi extends Model
 
     public function sampel()
     {
-        return $this->hasManyThrough(Sampel::class,Layanan::class);
+        return $this->hasManyThrough(Sampel::class, Layanan::class);
     }
 
     protected static function boot()

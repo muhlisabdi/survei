@@ -18,4 +18,18 @@ class Layanan extends Model
     {
         return $this->hasMany(Sampel::class);
     }
+
+    public function token()
+    {
+        return $this->hasMany(Token::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($model) {
+            $model->sampel()->delete();
+            $model->token()->delete();
+        });
+    }
 }

@@ -17,7 +17,7 @@ class CreateTokenTable extends Migration
             $table->increments('id');
             $table->string('token');
             $table->dateTime('expired');
-            $table->integer('id_layanan');
+            $table->integer('layanan_id');
             $table->timestamps();
         });
     }

@@ -205,7 +205,7 @@ class SampelController extends Controller
 
         $form->date('tanggal', 'Tanggal')->help('Tanggal mendapatkan layanan')->rules('required|date', [
             'required'=> 'Tanggal tidak boleh kosong',
-            ])->placeholder('Tanggal');
+            ])->placeholder('Tanggal')->required();
 
         $form->radio('jam_id', 'Waktu')->options(Jam::all()->pluck('keterangan', 'kode'))->rules('required', [
             'Jam Memperoleh Layanan harus terisi',
@@ -219,11 +219,12 @@ class SampelController extends Controller
             'Nama hanya boleh mengandung huruf',
             ]);
 
-        $form->number('umur', 'Umur')->rules('required|numeric|max:120|min:10', [
+        $form->text('umur', 'Umur')->rules('required|numeric|max:120|min:10', [
             'required'=> 'Umur tidak boleh kosong',
+            'numeric' => 'Umur hanya bisa diisi angka',
             'max'     => 'Umur tidak sesuai',
             'min'     => 'Umur tidak sesuai',
-            ])->min(10)->max(120)->placeholder('Umur');
+            ])->placeholder('Umur')->setWidth(2)->required();
 
         $form->radio('jk_id', 'Jawaban')->options(Jk::all()->pluck('keterangan', 'kode'))->rules('required', [
             'Jenis kelamin harus terisi',

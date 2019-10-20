@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Models\Layanan;
 use App\Admin\Models\Token;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -143,7 +144,7 @@ class TokenController extends Controller
         }
         $form->text('token');
         $form->datetime('expired');
-        $form->number('id_layanan');
+        $form->select('id_layanan', 'Unit Layanan')->options(Layanan::all()->pluck('nama', 'id'));
 
         return $form;
     }

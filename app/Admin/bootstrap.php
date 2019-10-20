@@ -30,7 +30,11 @@ Grid::init(function (Grid $grid) {
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     $navbar->right(Nav\Shortcut::make([
-        'Sampel' => 'sampel/create',
+        'Sampel'       => 'sampel/create',
+        'Kelompok'     => 'kelompok/create',
+        'Instansi'     => 'instansi/create',
+        'Unit Layanan' => 'layanan/create',
+        'Token'        => 'token/create',
     ], 'fa-plus')->title('Tambah'));
 });
 

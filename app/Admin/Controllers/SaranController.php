@@ -2,9 +2,9 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Models\Sampel;
-use App\Admin\Models\Layanan;
 use App\Admin\Models\Instansi;
+use App\Admin\Models\Layanan;
+use App\Admin\Models\Sampel;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Grid;
@@ -43,8 +43,8 @@ class SaranController extends Controller
             return Carbon::parse($tanggal)->translatedFormat('d F Y');
         })
         ->sortable();
-        $grid->nama('Nama Responden')->display(function ($nama){
-            if ($nama===NULL) {
+        $grid->nama('Nama Responden')->display(function ($nama) {
+            if ($nama === null) {
                 $nama = 'Anonim';
             }
             return $nama;
@@ -57,7 +57,7 @@ class SaranController extends Controller
             $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all()->pluck('nama', 'id'));
             $filter->between('tanggal', 'Tanggal')->date();
         });
-        $grid->saran('Saran/masukan')->limit(30)->modal('Saran/Masukan', function ($saran){
+        $grid->saran('Saran/masukan')->limit(30)->modal('Saran/Masukan', function ($saran) {
             return $saran->saran;
         });
         $grid->disableCreateButton();

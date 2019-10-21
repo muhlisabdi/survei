@@ -149,8 +149,8 @@ class SampelController extends Controller
             return Carbon::parse($tanggal)->translatedFormat('d F Y');
         })
         ->sortable();
-        $grid->nama('Nama Responden')->display(function ($nama){
-            if ($nama===NULL) {
+        $grid->nama('Nama Responden')->display(function ($nama) {
+            if ($nama === null) {
                 $nama = 'Anonim';
             }
             return $nama;

@@ -153,6 +153,7 @@ class SampelController extends Controller
             if ($nama === null) {
                 $nama = 'Anonim';
             }
+
             return $nama;
         })->sortable();
         $grid->layanan()->instansi_id('Instansi')->display(function ($instansi_id) {

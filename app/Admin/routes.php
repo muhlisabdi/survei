@@ -20,4 +20,5 @@ Route::group([
     $router->resource('pekerjaan', PekerjaanController::class);
     $router->resource('periode', PeriodeController::class);
     $router->resource('token', TokenController::class);
+    $router->get('saran', 'SaranController@index');
 });

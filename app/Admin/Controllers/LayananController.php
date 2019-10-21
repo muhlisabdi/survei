@@ -109,14 +109,8 @@ class LayananController extends Controller
 
         $show->id('ID');
         $show->nama('Nama Unit Layanan');
-        $show->instansi('Nama Instansi', function ($show) {
-            $show->setResource('/admin/instansi');
-            $show->nama('Nama Instansi');
-            $show->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
+        $show->instansi('Nama Instansi')->as(function ($instansi) {
+            return $instansi->nama;
         });
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
             return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');

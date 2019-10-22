@@ -55,7 +55,7 @@ class SaranController extends Controller
         })->sortable();
         $grid->layanan()->nama('Unit Layanan')->sortable();
         $grid->filter(function ($filter) {
-            $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all()->pluck('nama', 'id'));
+            $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all(['nama', 'id'])->pluck('nama', 'id'));
             $filter->between('tanggal', 'Tanggal')->date();
         });
         $grid->saran('Saran/masukan')->limit(30)->modal('Saran/Masukan', function ($saran) {

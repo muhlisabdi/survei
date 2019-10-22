@@ -90,7 +90,7 @@ class LayananController extends Controller
         $grid->instansi()->nama('Nama Instansi')->sortable();
         $grid->filter(function ($filter) {
             $filter->like('nama', 'Unit Layanan');
-            $filter->equal('instansi.id', 'Instansi')->select(Instansi::all()->pluck('nama', 'id'));
+            $filter->equal('instansi.id', 'Instansi')->select(Instansi::all(['nama', 'id'])->pluck('nama', 'id'));
         });
 
         return $grid;
@@ -135,7 +135,7 @@ class LayananController extends Controller
             $form->display('id', 'ID');
         }
         $form->text('nama', 'Nama Unit Layanan')->rules('required', ['required'=>'Nama Layanan Harus Terisi']);
-        $form->select('instansi_id', 'Nama Instansi')->options(Instansi::all()->pluck('nama', 'id'))->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
+        $form->select('instansi_id', 'Nama Instansi')->options(Instansi::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
 
         return $form;
     }

@@ -24,11 +24,17 @@ class Instansi extends Model
         return $this->hasManyThrough(Sampel::class, Layanan::class);
     }
 
+    public function token()
+    {
+        return $this->hasManyThrough(Token::class, Layanan::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
         static::deleting(function ($model) {
             $model->sampel()->delete();
+            $model->token()->delete();
             $model->layanan()->delete();
             $model->kelompok()->detach();
         });

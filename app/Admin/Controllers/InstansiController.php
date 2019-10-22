@@ -171,7 +171,7 @@ class InstansiController extends Controller
         $form->text('kota', 'Nama Kota')->rules('required', ['required'=>'Nama Kota Harus Terisi'])->required();
         $form->text('kepala', 'Nama Kepala')->rules('required', ['required'=>'Nama Kepala Harus Terisi'])->required();
         $form->text('nip', 'NIP Kepala')->rules('required', ['required'=>'NIP Kepala Harus Terisi'])->required();
-        $form->multipleSelect('kelompok', 'Kelompok')->options(Kelompok::all()->pluck('nama', 'id'));
+        $form->multipleSelect('kelompok', 'Kelompok')->options(Kelompok::all(['nama', 'id'])->pluck('nama', 'id'));
         $form->hasMany('layanan', function (Form\NestedForm $form) {
             $form->text('nama', 'Nama Layanan');
         })->useTable();

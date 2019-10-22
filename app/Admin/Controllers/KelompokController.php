@@ -145,7 +145,7 @@ class KelompokController extends Controller
             $form->display('id', 'ID');
         }
         $form->text('nama', 'Nama Kelompok')->rules('required', ['required'=>'Nama Kelompok Harus Terisi']);
-        $form->listbox('instansi', 'Nama Instansi')->options(Instansi::all()->pluck('nama', 'id'));
+        $form->listbox('instansi', 'Nama Instansi')->options(Instansi::all(['nama', 'id'])->pluck('nama', 'id'));
 
         return $form;
     }

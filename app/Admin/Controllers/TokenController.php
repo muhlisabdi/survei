@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Token\GenerateToken;
 use App\Admin\Models\Layanan;
 use App\Admin\Models\Token;
 use App\Http\Controllers\Controller;
@@ -87,17 +88,17 @@ class TokenController extends Controller
     {
         $grid = new Grid(new Token());
 
-        $grid->id('id')->sortable();
-        $grid->token('token');
-        $grid->expired('expired')->display(function ($date) {
+        $grid->token('Token');
+        $grid->expired('Expired')->display(function ($date) {
             return Carbon::parse($date)->translatedFormat('d F Y h:m:s');
         });
-        $grid->id_layanan('id_layanan');
-        $grid->created_at()->display(function ($created_at) {
-            return Carbon::parse($created_at)->translatedFormat('d F Y d:m:s');
+        $grid->layanan()->nama('Layanan')->sortable();
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new GenerateToken());
         });
-        $grid->updated_at()->display(function ($updated_at) {
-            return Carbon::parse($updated_at)->translatedFormat('d F Y d:m:s');
+        $grid->filter(function ($filter) {
+            $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all(['nama', 'id'])->pluck('nama', 'id'));
+            $filter->between('expired', 'Tanggal Expired')->datetime();
         });
 
         return $grid;
@@ -119,7 +120,7 @@ class TokenController extends Controller
         $show->expired('expired')->as(function ($date) {
             return Carbon::parse($date)->translatedFormat('d F Y h:m:s');
         });
-        $show->id_layanan('id_layanan');
+        $show->id_layanan('layanan_id');
         $show->created_at()->as(function ($created_at) {
             return Carbon::parse($created_at)->translatedFormat('d F Y d:m:s');
         });
@@ -141,10 +142,20 @@ class TokenController extends Controller
 
         if ($form->isEditing()) {
             $form->display('id');
+            $form->text('token')->rules('required|digits:6', [
+                'required'=> 'Jumlah tidak boleh kosong',
+                'digits'=> 'Isian  Harus 6 digit angka',
+                ])->required();
+        } elseif ($form->isCreating()) {
+            $form->text('token')->rules('required|digits:6|unique:token,token', [
+            'required'=> 'Jumlah tidak boleh kosong',
+            'digits'=> 'Isian  Harus 6 digit angka',
+            'unique'=> 'Token sudah ada',
+            ])->required();
         }
-        $form->text('token');
         $form->datetime('expired');
-        $form->select('id_layanan', 'Unit Layanan')->options(Layanan::all()->pluck('nama', 'id'));
+        $form->select('layanan_id', 'Unit Layanan')->options(Layanan::all(['nama', 'id'])->pluck('nama', 'id'))
+            ->required()->rules('required', ['Layanan Harus Dipilih']);
 
         return $form;
     }

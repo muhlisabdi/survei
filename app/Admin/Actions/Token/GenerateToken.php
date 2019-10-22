@@ -23,6 +23,7 @@ class GenerateToken extends Action
             ];
         }
         Token::insert($data);
+
         return $this->response()->info("Berhasil menambah {$request->input('jumlah')} token")->refresh();
     }
 
@@ -45,6 +46,7 @@ class GenerateToken extends Action
         if ($this->tokenExists($token)) {
             return $this->generateToken();
         }
+
         return $token;
     }
 

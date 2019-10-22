@@ -144,13 +144,13 @@ class TokenController extends Controller
             $form->display('id');
             $form->text('token')->rules('required|digits:6', [
                 'required'=> 'Jumlah tidak boleh kosong',
-                'digits'=> 'Isian  Harus 6 digit angka',
+                'digits'  => 'Isian  Harus 6 digit angka',
                 ])->required();
         } elseif ($form->isCreating()) {
             $form->text('token')->rules('required|digits:6|unique:token,token', [
             'required'=> 'Jumlah tidak boleh kosong',
-            'digits'=> 'Isian  Harus 6 digit angka',
-            'unique'=> 'Token sudah ada',
+            'digits'  => 'Isian  Harus 6 digit angka',
+            'unique'  => 'Token sudah ada',
             ])->required();
         }
         $form->datetime('expired');

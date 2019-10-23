@@ -19,6 +19,6 @@ Route::group([
     $router->resource('pendidikan', PendidikanController::class);
     $router->resource('pekerjaan', PekerjaanController::class);
     $router->resource('periode', PeriodeController::class);
-    $router->resource('token', TokenController::class);
-    $router->get('saran', 'SaranController@index');
+    $router->resource('token', TokenController::class)->only(['index', 'show', 'destroy']);
+    $router->resource('saran', SaranController::class)->only(['index']);
 });

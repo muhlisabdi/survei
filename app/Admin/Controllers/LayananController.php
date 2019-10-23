@@ -113,10 +113,10 @@ class LayananController extends Controller
             return $instansi->nama;
         });
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
 
         return $show;

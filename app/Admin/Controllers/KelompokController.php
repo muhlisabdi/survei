@@ -114,10 +114,10 @@ class KelompokController extends Controller
         $show->id('ID');
         $show->nama('Nama Kelompok');
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->instansi('', function ($grid) {
             $grid->resource('/admin/instansi');

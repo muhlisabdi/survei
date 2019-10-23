@@ -63,6 +63,7 @@ class SaranController extends Controller
         });
         $grid->disableCreateButton();
         $grid->disableActions();
+        $grid->disableRowSelector();
 
         return $grid;
     }

@@ -125,10 +125,10 @@ class InstansiController extends Controller
         $show->kepala('Nama Kepala');
         $show->nip('NIP Kepala');
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->layanan('', function ($grid) {
             $grid->resource('/admin/layanan');

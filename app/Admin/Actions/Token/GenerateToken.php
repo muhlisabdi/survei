@@ -15,16 +15,21 @@ class GenerateToken extends Action
     public function handle(Request $request)
     {
         $data = [];
-        for ($i = 0; $i < (int) $request->input('jumlah'); $i++) {
+        for ($i = 0; $i < (int) $request->get('jumlah'); $i++) {
             $data[] = [
                 'token'      => $this->generateToken(),
-                'layanan_id' => $request->input('layanan'),
-                'expired'    => $request->input('expired'),
+                'layanan_id' => $request->get('layanan'),
+                'expired'    => $request->get('expired'),
             ];
         }
+        try {
         Token::insert($data);
 
-        return $this->response()->info("Berhasil menambah {$request->input('jumlah')} token")->refresh();
+        return $this->response()->success("Berhasil menambah {$request->input('jumlah')} token")->refresh();
+        } catch (Exception $e) {
+
+        return $this->response()->error('Error: '.$e->getMessage());
+        }
     }
 
     public function form()
@@ -36,7 +41,7 @@ class GenerateToken extends Action
             'max'     => 'Isian maksimal 100',
             ])->placeholder('Maksimal 100 Token');
         $this->select('layanan', 'Unit layanan')->options(Layanan::all(['nama', 'id'])->pluck('nama', 'id'))->required();
-        $this->datetime('expired', 'Berlaku Sampai')->placeholder('Berlaku Sampai');
+        $this->datetime('expired', 'Berlaku Sampai')->placeholder('Berlaku Sampai')->required();
     }
 
     protected function generateToken()

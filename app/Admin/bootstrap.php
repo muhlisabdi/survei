@@ -34,7 +34,7 @@ Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
         'Kelompok'     => 'kelompok/create',
         'Instansi'     => 'instansi/create',
         'Unit Layanan' => 'layanan/create',
-        'Token'        => 'token/create',
+        'Token'        => 'token',
     ], 'fa-plus')->title('Tambah'));
 });
 

@@ -86,8 +86,12 @@ class PeriodeController extends Controller
     {
         $grid = new Grid(new Periode());
         $grid->nama('Periode')->sortable()->editable();
-        $grid->start('Awal');
-        $grid->end('Akhir');
+        $grid->start('Awal')->display(function ($tanggal) {
+            return Carbon::parse($tanggal)->translatedFormat('d F Y');
+        });
+        $grid->end('Akhir')->display(function ($tanggal) {
+            return Carbon::parse($tanggal)->translatedFormat('d F Y');
+        });
         $grid->filter(function ($filter) {
             $filter->like('nama', 'Periode');
         });
@@ -108,13 +112,17 @@ class PeriodeController extends Controller
 
         $show->id('ID');
         $show->nama('Periode');
-        $show->start('Awal');
-        $show->end('Akhir');
+        $show->start('Awal')->as(function ($tanggal) {
+            return Carbon::parse($tanggal)->translatedFormat('d F Y');
+        });
+        $show->end('Akhir')->as(function ($tanggal) {
+            return Carbon::parse($tanggal)->translatedFormat('d F Y');
+        });
         $show->created_at('Dibuat Pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
         $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (d:m)');
+            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
         });
 
         return $show;
@@ -132,8 +140,7 @@ class PeriodeController extends Controller
             $form->display('id', 'ID');
         }
         $form->text('nama', 'Periode')->rules('required', ['required'=>'Nama Periode Harus Terisi']);
-        $form->date('start', 'Awal')->rules('required', ['required'=>'Tanggal awal harus terisi'])->required();
-        $form->date('end', 'Akhir')->rules('required', ['required'=>'Tanggal akhir harus terisi'])->required();
+        $form->dateRange('start', 'end', 'Periode')->rules('required', ['required'=>'Tanggal harus terisi'])->required();
 
         return $form;
     }

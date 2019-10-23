@@ -22,13 +22,13 @@ class GenerateToken extends Action
                 'expired'    => $request->get('expired'),
             ];
         }
+
         try {
-        Token::insert($data);
+            Token::insert($data);
 
-        return $this->response()->success("Berhasil menambah {$request->input('jumlah')} token")->refresh();
+            return $this->response()->success("Berhasil menambah {$request->input('jumlah')} token")->refresh();
         } catch (Exception $e) {
-
-        return $this->response()->error('Error: '.$e->getMessage());
+            return $this->response()->error('Error: '.$e->getMessage());
         }
     }
 

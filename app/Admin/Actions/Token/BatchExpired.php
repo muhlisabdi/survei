@@ -17,16 +17,15 @@ class BatchExpired extends BatchAction
                 $model->expired = $request->get('expired');
                 $model->save();
             }
-            return $this->response()->success("Berhasil mengubah {$collection->count()} token")->refresh();
-            } catch (Exception $e) {
 
+            return $this->response()->success("Berhasil mengubah {$collection->count()} token")->refresh();
+        } catch (Exception $e) {
             return $this->response()->error('Error: '.$e->getMessage());
-            }
+        }
     }
+
     public function form()
     {
         $this->datetime('expired', 'kadaluarsa')->required();
     }
-
-
 }

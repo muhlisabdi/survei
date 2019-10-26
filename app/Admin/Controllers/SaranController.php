@@ -63,7 +63,11 @@ class SaranController extends Controller
         });
         $grid->disableCreateButton();
         $grid->disableActions();
-        $grid->disableRowSelector();
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->batch(function (Grid\Tools\BatchActions $actions) {
+                $actions->disableDelete();
+            });
+        });
 
         return $grid;
     }

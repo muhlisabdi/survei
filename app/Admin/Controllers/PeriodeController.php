@@ -136,9 +136,7 @@ class PeriodeController extends Controller
     protected function form()
     {
         $form = new Form(new Periode());
-        if ($form->isEditing()) {
-            $form->display('id', 'ID');
-        }
+        $form->display('id', 'ID');
         $form->text('nama', 'Periode')->rules('required', ['required'=>'Nama Periode Harus Terisi']);
         $form->dateRange('start', 'end', 'Periode')->rules('required', ['required'=>'Tanggal harus terisi'])->required();
 

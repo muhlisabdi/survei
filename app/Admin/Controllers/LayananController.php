@@ -131,10 +131,9 @@ class LayananController extends Controller
     {
         $form = new Form(new Layanan());
 
-        if ($form->isEditing()) {
-            $form->display('id', 'ID');
-        }
-        $form->text('nama', 'Nama Unit Layanan')->rules('required', ['required'=>'Nama Layanan Harus Terisi']);
+        $form->display('id', 'ID');
+        $form->text('nama', 'Nama Unit Layanan')->rules('required', ['required'=>'Nama Layanan Harus Terisi'])
+             ->help('Tuliskan Lengkap Dengan Nama Instansi');
         $form->select('instansi_id', 'Nama Instansi')->options(Instansi::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
 
         return $form;

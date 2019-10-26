@@ -207,7 +207,7 @@ class SampelController extends Controller
         $form->divider('Identitas Unit Layanan');
 
         // $form->select('namadinas')->options()->load('nama', '/api/instansi','id','nama');
-        $form->select('layanan_id')->options(Layanan::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['Jenis Layanan Harus Dipilih'])->required();
+        $form->select('layanan_id', 'Unit Layanan')->options(Layanan::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['Jenis Layanan Harus Dipilih'])->required();
 
         $form->date('tanggal', 'Tanggal')->help('Tanggal mendapatkan layanan')->rules('required|date', [
             'required'=> 'Tanggal tidak boleh kosong',
@@ -232,7 +232,7 @@ class SampelController extends Controller
             'min'     => 'Umur tidak sesuai',
             ])->placeholder('Umur')->setWidth(2)->required();
 
-        $form->radio('jk_id', 'Jawaban')->options(Jk::all(['keterangan', 'kode'])->pluck('keterangan', 'kode'))->rules('required', [
+        $form->radio('jk_id', 'Jenis Kelamin')->options(Jk::all(['keterangan', 'kode'])->pluck('keterangan', 'kode'))->rules('required', [
             'Jenis kelamin harus terisi',
             ])->required()->stacked();
 

@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Models\Instansi;
-use App\Admin\Models\Layanan;
+use App\Admin\Models\Klasifikasi;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -12,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Carbon;
 
-class LayananController extends Controller
+class KlasifikasiController extends Controller
 {
     use HasResourceActions;
 
@@ -26,15 +25,15 @@ class LayananController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Unit Layanan')
-            ->description('Daftar Unit Layanan')
+            ->header('Klasifikasi')
+            ->description('Pengaturan Klasifikasi')
             ->body($this->grid());
     }
 
     /**
      * Show interface.
      *
-     * @param mixed   $id
+     * @param mixed $id
      * @param Content $content
      *
      * @return Content
@@ -43,14 +42,14 @@ class LayananController extends Controller
     {
         return $content
             ->header('Detail')
-            ->description('Detail Unit Layanan')
+            ->description('Detail Klasifikasi')
             ->body($this->detail($id));
     }
 
     /**
      * Edit interface.
      *
-     * @param mixed   $id
+     * @param mixed $id
      * @param Content $content
      *
      * @return Content
@@ -59,7 +58,7 @@ class LayananController extends Controller
     {
         return $content
             ->header('Ubah')
-            ->description('Ubah Unit Layanan')
+            ->description('Ubah Klasifikasi')
             ->body($this->form()->edit($id));
     }
 
@@ -74,7 +73,7 @@ class LayananController extends Controller
     {
         return $content
             ->header('Tambah')
-            ->description('Tambah Unit Layanan')
+            ->description('Tambah Klasifikasi')
             ->body($this->form());
     }
 
@@ -85,13 +84,12 @@ class LayananController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Layanan());
-        $grid->nama('Unit Layanan')->sortable()->editable();
-        $grid->instansi()->nama('Nama Instansi')->sortable();
-        $grid->filter(function ($filter) {
-            $filter->like('nama', 'Unit Layanan');
-            $filter->equal('instansi.id', 'Instansi')->select(Instansi::all(['nama', 'id'])->pluck('nama', 'id'));
-        });
+        $grid = new Grid(new Klasifikasi());
+
+        $grid->batas('Batas Bawah');
+        $grid->klasifikasi('Klasifikasi');
+        $grid->disableFilter();
+        $grid->disableExport();
 
         return $grid;
     }
@@ -105,18 +103,16 @@ class LayananController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Layanan::findOrFail($id));
+        $show = new Show(Klasifikasi::findOrFail($id));
 
-        $show->id('ID');
-        $show->nama('Nama Unit Layanan');
-        $show->instansi('Nama Instansi')->as(function ($instansi) {
-            return $instansi->nama;
+        $show->id('Id');
+        $show->batas('Batas Bawah');
+        $show->klasifikasi('Klasifikasi');
+        $show->created_at(trans('admin.created_at'))->as(function ($created_at) {
+            return Carbon::parse($created_at)->translatedFormat('d F Y H:m:s');
         });
-        $show->created_at('Dibuat Pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
-        });
-        $show->updated_at('Diperbaharui pada')->as(function ($tanggal) {
-            return Carbon::parse($tanggal)->translatedFormat('d F Y (H:i)');
+        $show->updated_at(trans('admin.updated_at'))->as(function ($updated_at) {
+            return Carbon::parse($updated_at)->translatedFormat('d F Y H:m:s');
         });
 
         return $show;
@@ -129,11 +125,12 @@ class LayananController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Layanan());
-
-        $form->display('id', 'ID');
-        $form->text('nama', 'Nama Unit Layanan')->rules('required', ['required'=>'Nama Layanan Harus Terisi']);
-        $form->select('instansi_id', 'Nama Instansi')->options(Instansi::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['required'=>'Nama Instansi Harus Terisi']);
+        $form = new Form(new Klasifikasi());
+        $form->text('batas', 'Batas Bawah')->rules('numeric|required', [
+            'required'=> 'Kode Harus Terisi',
+            'numeric' => 'Batas harus berupa angka',
+            ])->help('Gunakan . (titik) sebagai pembatas desimal');
+        $form->text('klasifikasi')->rules('required', ['required'=>'Nama Keterangan Harus Terisi']);
 
         return $form;
     }

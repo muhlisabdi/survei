@@ -10,11 +10,15 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
     $router->get('/', 'HomeController@index')->name('admin.home');
+    $router->get('/ikm', 'IkmController@index');
+    $router->get('/ikm/layanan', 'IkmController@layanan');
+    $router->get('/ikm/kelompok', 'IkmController@kelompok');
     $router->resource('kelompok', KelompokController::class);
     $router->resource('instansi', InstansiController::class);
     $router->resource('layanan', LayananController::class);
     $router->resource('sampel', SampelController::class);
     $router->resource('jk', JkController::class);
+    $router->resource('klasifikasi', KlasifikasiController::class);
     $router->resource('jam', JamController::class);
     $router->resource('pendidikan', PendidikanController::class);
     $router->resource('pekerjaan', PekerjaanController::class);

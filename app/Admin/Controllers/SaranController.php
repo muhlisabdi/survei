@@ -38,6 +38,7 @@ class SaranController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Sampel());
+        $grid->model()->where('saran', '!=', null);
         $grid->model()->orderBy('tanggal', 'desc');
         $grid->tanggal('Tanggal')->display(function ($tanggal) {
             return Carbon::parse($tanggal)->translatedFormat('d F Y');
@@ -55,7 +56,14 @@ class SaranController extends Controller
         })->sortable();
         $grid->layanan()->nama('Unit Layanan')->sortable();
         $grid->filter(function ($filter) {
-            $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all(['nama', 'id'])->pluck('nama', 'id'));
+            $filter->equal('layanan.id', 'Unit Layanan')->select(function ($layanans) {
+                $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
+                foreach ($layanans as $key => $value) {
+                    $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                        ->pluck('nama')[0].")";
+                }
+                return $layanans;
+            });
             $filter->between('tanggal', 'Tanggal')->date();
         });
         $grid->saran('Saran/masukan')->limit(30)->modal('Saran/Masukan', function ($saran) {

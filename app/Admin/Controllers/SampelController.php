@@ -18,6 +18,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SampelController extends Controller
 {
@@ -161,7 +162,14 @@ class SampelController extends Controller
         })->sortable();
         $grid->layanan()->nama('Unit Layanan')->sortable();
         $grid->filter(function ($filter) {
-            $filter->equal('layanan.id', 'Unit Layanan')->select(Layanan::all(['nama', 'id'])->pluck('nama', 'id'));
+            $filter->equal('layanan.id', 'Unit Layanan')->select(function ($layanans) {
+                $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
+                foreach ($layanans as $key => $value) {
+                    $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                        ->pluck('nama')[0].")";
+                }
+                return $layanans;
+            });
             $filter->between('tanggal', 'Tanggal')->date();
         });
 
@@ -207,8 +215,14 @@ class SampelController extends Controller
         $form->divider('Identitas Unit Layanan');
 
         // $form->select('namadinas')->options()->load('nama', '/api/instansi','id','nama');
-        $form->select('layanan_id', 'Unit Layanan')->options(Layanan::all(['nama', 'id'])->pluck('nama', 'id'))->rules('required', ['Jenis Layanan Harus Dipilih'])->required();
-
+        $form->select('layanan_id', 'Unit Layanan')->options(function ($layanans) {
+            $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
+            foreach ($layanans as $key => $value) {
+                $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                    ->pluck('nama')[0].")";
+            }
+            return $layanans;
+        })->rules('required', ['Jenis Layanan Harus Dipilih'])->required();
         $form->date('tanggal', 'Tanggal')->help('Tanggal mendapatkan layanan')->rules('required|date', [
             'required'=> 'Tanggal tidak boleh kosong',
             ])->placeholder('Tanggal')->required();

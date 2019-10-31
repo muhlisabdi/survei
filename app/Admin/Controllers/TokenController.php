@@ -4,8 +4,8 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Token\BatchExpired;
 use App\Admin\Actions\Token\BatchLayanan;
-use App\Admin\Actions\Token\GenerateToken;
 use App\Admin\Actions\Token\DeleteToken;
+use App\Admin\Actions\Token\GenerateToken;
 use App\Admin\Models\Layanan;
 use App\Admin\Models\Token;
 use App\Http\Controllers\Controller;
@@ -120,5 +120,4 @@ class TokenController extends Controller
 
         return $show;
     }
-
 }

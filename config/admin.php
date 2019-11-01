@@ -409,6 +409,21 @@ return [
     |
     */
     'extensions' => [
-
-    ],
-];
+        'data-table' => [
+            // If the value is set to false, this extension will be disabled
+            'enable' => true,
+            // global options
+            'options' => [
+                'paging' => true,
+                'lengthChange' => true,
+                'searching' => true,
+                'ordering' => true,
+                'info' => true,
+                'responsive' => true,
+                'dom'=>'Bfrtip',
+                'fixedHeader' => true,
+                'language' => 'Indonesian',
+            ],
+        ]
+            ],
+        ];

@@ -15,12 +15,17 @@
             {
                 "type": "vcs",
                 "url": "https://github.com/muhlisabdi/helpers"
+            },
+            {
+                "type": "vcs",
+                "url": "https://github.com/muhlisabdi/data-table"
             }
-        
+
         ],
     "require": {
         "php": "^7.2",
         "encore/laravel-admin": "dev-master",
+        "jxlwqq/data-table": "dev-master",
         "fideloper/proxy": "^4.0",
         "laravel-admin-ext/helpers": "dev-master",
         "laravel/framework": "^6.0",

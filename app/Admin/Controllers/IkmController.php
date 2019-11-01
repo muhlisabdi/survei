@@ -4,10 +4,11 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Models\Klasifikasi;
 use App\Http\Controllers\Controller;
-use Encore\Admin\Widgets\Table;
+use Jxlwqq\DataTable\DataTable;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class IkmController extends Controller
@@ -42,7 +43,9 @@ class IkmController extends Controller
         $arrTable=DB::table('sampel')
         ->selectRaw($this->select())
         ->get()->toArray();
-        $tabel = new Table($header, $this->columns($arrTable, true));
+        $style = ['table-bordered','table-hover', 'table-striped'];
+
+        $tabel = new DataTable($header, $this->columns($arrTable, true), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel kabupaten'));
 
         return $tabel;
     }
@@ -56,7 +59,8 @@ class IkmController extends Controller
         ->groupBy('layanan.nama', 'layanan_id')
         ->orderBy('IKM', 'desc')
         ->get()->toArray();
-        $tabel = new Table($header, $this->columns($arrTable));
+        $style = ['table-bordered','table-hover', 'table-striped'];
+        $tabel = new DataTable($header, $this->columns($arrTable),$style, $this->tableOption());
 
         return $tabel;
     }
@@ -77,7 +81,7 @@ class IkmController extends Controller
         ->groupBy('kelompok.nama', 'kelompok.id')
         ->orderBy('IKM', 'desc')
         ->get()->toArray();
-        $tabel = new Table($header, $this->columns($arrTable));
+        $tabel = new DataTable($header, $this->columns($arrTable), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel per Kelompok'));
 
         return $tabel;
     }
@@ -108,4 +112,29 @@ class IkmController extends Controller
         }
         return $arrTable2;
     }
+
+    private function tableOption($title = 'Judul')
+    {
+        return [
+            'buttons'=>
+            [
+                [
+                    'extend' =>'excelHtml5',
+                    'title' => $title,
+                    'messageBottom' => 'Dicetak pada '.Carbon::parse(now())->translatedFormat('d F Y (H:i:s)'),
+                ],                [
+                    'extend' =>'print',
+                    'title' => $title,
+                    'messageBottom' => 'Dicetak pada '.Carbon::parse(now())->translatedFormat('d F Y (H:i:s)'),
+                ],
+            ],
+        ];
+    }
+
+    private function tableStyle()
+    {
+        return ['table-bordered','table-hover', 'table-striped'];
+    }
+
+
 }

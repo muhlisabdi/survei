@@ -9,6 +9,7 @@ Route::group([
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
+    $router->resource('auth/users', 'PenggunaController')->names('admin.auth.users');
     $router->get('/', 'HomeController@index')->name('admin.home');
     $router->get('/ikm', 'IkmController@index');
     $router->get('/ikm/layanan', 'IkmController@layanan');

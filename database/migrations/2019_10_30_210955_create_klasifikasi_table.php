@@ -17,6 +17,7 @@ class CreateKlasifikasiTable extends Migration
             $table->increments('id');
             $table->decimal('batas');
             $table->string('klasifikasi');
+            $table->string('warna');
             $table->timestamps();
         });
     }

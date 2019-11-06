@@ -162,7 +162,7 @@ class SampelController extends Controller
         })->sortable();
         $grid->layanan()->nama('Unit Layanan')->sortable();
         $grid->filter(function ($filter) {
-            $filter->equal('layanan.id', 'Unit Layanan')->select(function ($layanans) {
+            $filter->in('layanan.id', 'Unit Layanan')->multipleSelect(function ($layanans) {
                 $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
                 foreach ($layanans as $key => $value) {
                     $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])

@@ -87,7 +87,9 @@ class KlasifikasiController extends Controller
         $grid = new Grid(new Klasifikasi());
 
         $grid->batas('Batas Bawah');
-        $grid->klasifikasi('Klasifikasi');
+        $grid->klasifikasi('Klasifikasi')->display(function($klasifikasi){
+            return "<span style=\"color:{$this->warna};\">{$klasifikasi}</span>";
+        });
         $grid->disableFilter();
         $grid->disableExport();
 
@@ -131,6 +133,7 @@ class KlasifikasiController extends Controller
             'numeric' => 'Batas harus berupa angka',
             ])->help('Gunakan . (titik) sebagai pembatas desimal');
         $form->text('klasifikasi')->rules('required', ['required'=>'Nama Keterangan Harus Terisi']);
+        $form->color('warna', 'Label Warna');
 
         return $form;
     }

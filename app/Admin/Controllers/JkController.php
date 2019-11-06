@@ -89,7 +89,6 @@ class JkController extends Controller
         $grid->kode('Kode');
         $grid->keterangan('Keterangan')->editable();
         $grid->disableFilter();
-        $grid->disableExport();
 
         return $grid;
     }

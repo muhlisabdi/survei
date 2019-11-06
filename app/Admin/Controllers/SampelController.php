@@ -18,7 +18,6 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class SampelController extends Controller
 {
@@ -165,9 +164,10 @@ class SampelController extends Controller
             $filter->in('layanan.id', 'Unit Layanan')->multipleSelect(function ($layanans) {
                 $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
                 foreach ($layanans as $key => $value) {
-                    $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
-                        ->pluck('nama')[0].")";
+                    $layanans[$key] = $value.' ('.Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                        ->pluck('nama')[0].')';
                 }
+
                 return $layanans;
             });
             $filter->between('tanggal', 'Tanggal')->date();
@@ -218,9 +218,10 @@ class SampelController extends Controller
         $form->select('layanan_id', 'Unit Layanan')->options(function ($layanans) {
             $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
             foreach ($layanans as $key => $value) {
-                $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
-                    ->pluck('nama')[0].")";
+                $layanans[$key] = $value.' ('.Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                    ->pluck('nama')[0].')';
             }
+
             return $layanans;
         })->rules('required', ['Jenis Layanan Harus Dipilih'])->required();
         $form->date('tanggal', 'Tanggal')->help('Tanggal mendapatkan layanan')->rules('required|date', [

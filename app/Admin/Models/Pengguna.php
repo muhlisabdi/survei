@@ -2,14 +2,13 @@
 
 namespace App\Admin\Models;
 
-use App\Admin\Models\Instansi;
+use Encore\Admin\Auth\Database\HasPermissions;
 use Encore\Admin\Traits\AdminBuilder;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
-use Encore\Admin\Auth\Database\HasPermissions;
 
 /**
  * Class Administrator.

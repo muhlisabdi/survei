@@ -414,16 +414,16 @@ return [
             'enable' => true,
             // global options
             'options' => [
-                'paging' => true,
+                'paging'       => true,
                 'lengthChange' => true,
-                'searching' => true,
-                'ordering' => true,
-                'info' => true,
-                'responsive' => true,
-                'dom'=>'Bfrtip',
-                'fixedHeader' => true,
-                'language' => 'Indonesian',
+                'searching'    => true,
+                'ordering'     => true,
+                'info'         => true,
+                'responsive'   => true,
+                'dom'          => 'Bfrtip',
+                'fixedHeader'  => true,
+                'language'     => 'Indonesian',
             ],
-        ]
+        ],
             ],
         ];

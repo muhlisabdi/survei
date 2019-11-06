@@ -59,9 +59,10 @@ class SaranController extends Controller
             $filter->equal('layanan.id', 'Unit Layanan')->select(function ($layanans) {
                 $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
                 foreach ($layanans as $key => $value) {
-                    $layanans[$key] = $value." (".Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
-                        ->pluck('nama')[0].")";
+                    $layanans[$key] = $value.' ('.Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
+                        ->pluck('nama')[0].')';
                 }
+
                 return $layanans;
             });
             $filter->between('tanggal', 'Tanggal')->date();

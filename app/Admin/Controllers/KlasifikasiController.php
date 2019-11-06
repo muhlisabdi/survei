@@ -33,7 +33,7 @@ class KlasifikasiController extends Controller
     /**
      * Show interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
      *
      * @return Content
@@ -49,7 +49,7 @@ class KlasifikasiController extends Controller
     /**
      * Edit interface.
      *
-     * @param mixed $id
+     * @param mixed   $id
      * @param Content $content
      *
      * @return Content
@@ -87,7 +87,7 @@ class KlasifikasiController extends Controller
         $grid = new Grid(new Klasifikasi());
 
         $grid->batas('Batas Bawah');
-        $grid->klasifikasi('Klasifikasi')->display(function($klasifikasi){
+        $grid->klasifikasi('Klasifikasi')->display(function ($klasifikasi) {
             return "<span style=\"color:{$this->warna};\">{$klasifikasi}</span>";
         });
         $grid->disableFilter();

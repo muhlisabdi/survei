@@ -11,8 +11,8 @@ Route::group([
 ], function (Router $router) {
     $router->resource('auth/users', 'PenggunaController')->names('admin.auth.users');
     $router->get('/', 'HomeController@index')->name('admin.home');
-    $router->get('/tabulasi', 'TabulasiController@index');
-    $router->get('/tabulasi/{group?}/{id?}', 'TabulasiController@index');
+    $router->get('/tabulasi/main/{group?}/{id?}', 'TabulasiController@main');
+    $router->get('/tabulasi/detail/{group?}/{id?}', 'TabulasiController@detail');
     $router->resource('kelompok', KelompokController::class);
     $router->resource('instansi', InstansiController::class);
     $router->resource('layanan', LayananController::class);

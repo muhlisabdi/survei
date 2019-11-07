@@ -2,7 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Models\Instansi;
+use App\Admin\Models\Kelompok;
 use App\Admin\Models\Klasifikasi;
+use App\Admin\Models\Layanan;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets;
@@ -13,11 +16,31 @@ use Jxlwqq\DataTable\DataTable;
 
 class TabulasiController extends Controller
 {
-    public function index(Content $content, $group = 'kelompok', $id = null)
+
+    public function main (Content $content, $group = '', $id = null)
     {
-        return $content->header('Sampel')
-                        ->description('Rekapitulasi Sampel')
-                        ->row((new Widgets\Box('Rekapitulasi Sampel Antah Berantah', $this->generateTableDetail($group, 'Jk', 'satu', 'ikm', $id)))->style('success')->collapsable()->removable());
+        return $content->header('Tabulasi')
+        ->description('Tabulasi Sampel')
+        ->row($this->generateBox('Jk', 'satu', 'main', 'sampel', $group, $id));
+    }
+
+    public function detail (Content $content, $group = '', $id = null)
+    {
+        return $content->header('Tabulasi')
+        ->description('Tabulasi Sampel')
+        ->row($this->generateBox('Jk', 'satu', 'detail', 'ikm', $group, $id));
+    }
+
+    private function generateBox($tabel , $dataTableID, $type, $display, $group='', $id = null)
+    {
+        $box = new Widgets\Box(
+            $this->setTitle($type, $display, $tabel, $group, $id),
+            $this->generateTable($group, $tabel, $dataTableID, $type, $display, $id),
+            $this->setFooter()
+        );
+        $box->style('success')->collapsable()->removable();
+
+        return $box;
     }
 
     /**
@@ -29,72 +52,102 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function generateTableDetail($group, $tabel, $dataTableID, $display = 'sampel', $id = null)
+    private function generateTable($group, $tabel, $dataTableID, $type, $display, $id = null)
     {
+
+        $judul = $this->tableOption($this->setTitle($type, $display, $tabel, $group, $id, false));
         switch ($group) {
             case 'kelompok':
                 if (is_null($id)) {
-                    $data = $this->headerAndQueryDetail($tabel, 'Kelompok', $group, $display);
+                    if ($type == 'main'){
+                        $data = $this->headerAndQueryMain('Kelompok', $group, $display);
+                    } else {
+                        $data = $this->headerAndQueryDetail($tabel, 'Kelompok', $group, $display);
+                    }
                     $arrTable = $this->kelompokQuery($data[0], null)->groupBy('kelompok.nama', 'kelompok.id')
                                 ->orderBy('kelompok.id', 'asc')
                                 ->get()->toArray();
                     $header = $data[1];
-                    $tabel = new DataTable($header, $this->generateRows($arrTable, $group, $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kelompok Antah Berantah'), $dataTableID);
+                    $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
                 } else {
-                    $data = $this->headerAndQueryDetail($tabel, 'Instansi', 'instansi', $display);
+                    if ($type == 'main'){
+                        $data = $this->headerAndQueryMain('Instansi', 'instansi', $display);
+                    } else {
+                        $data = $this->headerAndQueryDetail($tabel, 'Instansi', 'instansi', $display);
+                    }
                     $arrTable = $this->kelompokQuery($data[0], $id)->groupBy('instansi.nama', 'instansi.id')
                                 ->orderBy('instansi.id', 'asc')
                                 ->get()->toArray();
                     $header = $data[1];
-                    $tabel = new DataTable($header, $this->generateRows($arrTable, 'instansi', $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kabupaten Antah Berantah'), $dataTableID);
+                    $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'instansi', $display), $this->tableStyle(), $judul, $dataTableID);
                 }
                 break;
 
             case 'instansi':
             if (is_null($id)) {
-                $data = $this->headerAndQueryDetail($tabel, 'Instansi', $group, $display);
+                if ($type == 'main'){
+                    $data = $this->headerAndQueryMain('Instansi', $group, $display);
+                } else {
+                    $data = $this->headerAndQueryDetail($tabel, 'Instansi', $group, $display);
+                }
                 $arrTable = $this->instansiQuery($data[0], null)->groupBy('instansi.nama', 'instansi.id')
                             ->orderBy('instansi.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($arrTable, $group, $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kelompok Antah Berantah'), $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
-                $data = $this->headerAndQueryDetail($tabel, 'Layanan', 'layanan', $display);
+                if ($type == 'main'){
+                    $data = $this->headerAndQueryMain('Layanan', 'layanan', $display);
+                } else {
+                    $data = $this->headerAndQueryDetail($tabel, 'Layanan', 'layanan', $display);
+                }
                 $arrTable = $this->instansiQuery($data[0], $id)->groupBy('layanan.nama', 'layanan.id')
                             ->orderBy('layanan.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($arrTable, 'layanan', $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kabupaten Antah Berantah'), $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'layanan', $display), $this->tableStyle(), $judul, $dataTableID);
             }
                 break;
 
             case 'layanan':
             if (is_null($id)) {
-                $data = $this->headerAndQueryDetail($tabel, 'Layanan', $group, $display);
+                if ($type == 'main'){
+                    $data = $this->headerAndQueryMain('Layanan', $group, $display);
+                } else {
+                    $data = $this->headerAndQueryDetail($tabel, 'Layanan', $group, $display);
+                }
                 $arrTable = $this->layananQuery($data[0], null)->groupBy('layanan.nama', 'layanan.id')
                             ->orderBy('layanan.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($arrTable, $group, $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kelompok Antah Berantah'), $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
-                $data = $this->headerAndQueryDetail($tabel, 'Nama', 'sampel', $display);
+                if ($type == 'main'){
+                    $data = $this->headerAndQueryMain('Nama', 'sampel', $display);
+                } else {
+                    $data = $this->headerAndQueryDetail($tabel, 'Nama', 'sampel', $display);
+                }
                 $arrTable = $this->layananQuery($data[0], $id)->groupBy('sampel.nama', 'sampel.id')
                             ->orderBy('sampel.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($arrTable, 'sampel', $display), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kabupaten Antah Berantah'), $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'sampel', $display), $this->tableStyle(), $judul, $dataTableID);
             }
                 break;
 
             default:
-                $data = $this->generateDataSampel('', $tabel, 'Kabupaten');
+                if ($type == 'main'){
+                    $data = $this->headerAndQueryMain('Kabupaten', $group, $display);
+                } else {
+                    $data = $this->headerAndQueryDetail($tabel, 'Kabupaten', $group, $display);
+                }
+                $arrTable = $this->layananQuery($data[0], null)
+                            ->get()->toArray();
                 $header = $data[1];
-                $arrTable = DB::table('sampel')
-                        ->selectRaw($data[0])
-                        ->get()
-                        ->toArray();
-                $tabel = new DataTable($header, $this->generateColumns(false, $arrTable, true), $this->tableStyle(), $this->tableOption('Rekapitulasi Sampel Kabupaten Antah Berantah'));
+                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display, 'Kabupaten'), $this->tableStyle(), $judul, $dataTableID);
+
                 break;
+
         }
 
         return $tabel;
@@ -111,11 +164,11 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function headerAndQueryDetail($model, $preheader, $group, $display = 'sampel')
+    private function headerAndQueryDetail($model, $preheader, $group, $display)
     {
         $q = '';
         if ($display == 'ikm' && $group !== 'sampel') {
-            $header = [$preheader, 'Jumlah'];
+            $header = [$preheader, 'Jumlah Sampel'];
         } else {
             $header = [$preheader];
         }
@@ -136,7 +189,7 @@ class TabulasiController extends Controller
             $q .= 'AVG(u1+u2+u3+u4+u5+u6+u7+u8+u9)/9 AS nrrt, ';
             $q .= '25*AVG(u1+u2+u3+u4+u5+u6+u7+u8+u9)/9 AS ikm';
         } else {
-            $q .= 'COUNT(sampel.'.$model.'_id) AS total';
+            $q .= 'COUNT(sampel.id) AS total';
         }
         if ($display == 'ikm') {
             $header[] = 'NRRT';
@@ -145,13 +198,16 @@ class TabulasiController extends Controller
         } else {
             $header[] = 'Total';
         }
-
-        return [$group.'.id AS link, '.$group.'.nama AS firstcol,'.$q, $header];
+        if ($group == ''){
+            return [$q, $header];
+        } else {
+            return [$group.'.id AS link, '.$group.'.nama as firstcol,'.$q, $header];
+        }
     }
 
-    private function headerAndQueryMain($preheader, $group, $display = 'sampel')
+    private function headerAndQueryMain($preheader, $group, $display):array
     {
-        if ($display = 'sampel') {
+        if ($display == 'sampel') {
             $header = [
                 $preheader,
                 'Jumlah Sampel',
@@ -179,13 +235,19 @@ class TabulasiController extends Controller
                 'U7',
                 'U8',
                 'U9',
+                'NRRT',
+                'IKM',
+                'Kategori',
             ];
             $q = 'count(sampel.id) as jumlah, avg(u1), avg(u2), avg(u3), avg(u4), avg(u5), avg(u6), avg(u7), avg(u8), avg(u9),
             (sum(u1+u2+u3+u4+u5+u6+u7+u8+u9))/(9*count(sampel.id)) as nrrt,
             25*(sum(u1+u2+u3+u4+u5+u6+u7+u8+u9))/(9*count(sampel.id)) as ikm';
         }
-
-        return [$group.'.id as link, '.$group.'.nama as firstcol,'.$q, $header];
+        if ($group == ''){
+            return [$q, $header];
+        } else {
+            return [$group.'.id as link, '.$group.'.nama as firstcol,'.$q, $header];
+        }
     }
 
     /**
@@ -269,7 +331,7 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function generateRows(array $arrTable, $group, $display = 'sampel', $kabupaten = '')
+    private function generateRows($type, array $arrTable, $group, $display, $kabupaten = '')
     {
         $arrTable = json_decode(json_encode($arrTable, true), true);
         foreach ($arrTable as $arr) {
@@ -288,10 +350,17 @@ class TabulasiController extends Controller
                 $arr = Arr::add($arr, 'klasifikasi', $this->setWarna($arr['ikm'], $this->setKlasifikasi($arr['ikm'])));
                 $arr['ikm'] = $this->setWarna($arr['ikm'], number_format($arr['ikm'], 2));
             }
-            if ($group !== 'sampel') {
-                $arr['firstcol'] = $this->generateLink("tabulasi/{$group}/{$arr['link']}", $arr['firstcol']);
-            } else {
-                $arr['firstcol'] = $this->generateLink("sampel/{$arr['link']}/edit", $arr['firstcol'] ?: 'Anonim');
+            switch ($group) {
+                case 'sampel':
+                    $arr['firstcol'] = $this->generateLink("sampel/{$arr['link']}/edit", $arr['firstcol'] ?: 'Anonim');
+                    break;
+                case '':
+                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/kelompok", $kabupaten);
+                    break;
+
+                default:
+                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/{$group}/{$arr['link']}", $arr['firstcol']);
+                    break;
             }
             unset($arr['link']);
             $arrTable2[] = $arr;
@@ -308,21 +377,84 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function tableOption($title = 'Judul')
+    private function tableOption($title= '')
     {
         return [
             'buttons'=> [
                 [
                     'extend'        => 'excelHtml5',
                     'title'         => $title,
-                    'messageBottom' => 'Dicetak pada '.Carbon::parse(now())->translatedFormat('d F Y (H:i:s)'),
+                    'messageBottom' => $this->setFooter(),
                 ],                [
                     'extend'        => 'print',
                     'title'         => $title,
-                    'messageBottom' => 'Dicetak pada '.Carbon::parse(now())->translatedFormat('d F Y (H:i:s)'),
+                    'messageBottom' => $this->setFooter(),
                 ],
             ],
         ];
+    }
+
+    private function setFooter()
+    {
+        return 'Dicetak pada '.Carbon::parse(now())->translatedFormat('d F Y (H:i:s)');
+    }
+
+    private function setTitle($type, $display, $table, $group, $id, $html = true)
+    {
+        $title = 'Tabulasi';
+        switch ($display) {
+            case 'sampel':
+                $title .= ' Sampel';
+                break;
+            default:
+            $title .= ' Index';
+                break;
+        }
+        if ($group !=''){
+            $title .= ' menurut ';
+            if (is_null($id)) {
+                $title .= ucfirst($group).' (Semua)';
+            } else {
+                switch ($group) {
+                    case 'kelompok':
+                        if (!$html) {
+                            $title .= 'Instansi';
+                        } else {
+                            $title .= '<a href="'.admin_url('tabulasi/'.$type.'/instansi').'">Instansi</a>';
+                        }
+                        $title .= ' (Kelompok '.Kelompok::where('id', $id)->get('nama')->pluck('nama')[0].')';
+                        break;
+                    case 'instansi':
+                    if (!$html) {
+                        $title .= 'Layanan';
+                    } else {
+                        $title .= '<a href="'.admin_url('tabulasi/'.$type.'/layanan').'">layanan</a>';
+                    }
+                        $title .= ' ('.Instansi::where('id', $id)->get('nama')->pluck('nama')[0].')';
+                        break;
+                    case 'layanan':
+                        $title .= 'Sampel';
+                        $title .= ' ('.Layanan::where('id', $id)->get('nama')->pluck('nama')[0].')';
+                        break;
+                }
+            }
+        }
+        if ($type == 'detail') {
+            $title .= ' berdasarkan';
+            switch ($table) {
+                case 'Jk':
+                    $title .= ' Jenis Kelamin';
+                    break;
+                case 'Jam':
+                    $title .= ' Jam Pelayanan';
+                    break;
+                default:
+                    $title .= ucfirst($table);
+                    break;
+            }
+        }
+
+        return $title;
     }
 
     /**

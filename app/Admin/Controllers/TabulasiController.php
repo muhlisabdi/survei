@@ -16,22 +16,21 @@ use Jxlwqq\DataTable\DataTable;
 
 class TabulasiController extends Controller
 {
-
-    public function main (Content $content, $group = '', $id = null)
+    public function main(Content $content, $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
         ->row($this->generateBox('Jk', 'satu', 'main', 'sampel', $group, $id));
     }
 
-    public function detail (Content $content, $group = '', $id = null)
+    public function detail(Content $content, $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
         ->row($this->generateBox('Jk', 'satu', 'detail', 'ikm', $group, $id));
     }
 
-    private function generateBox($tabel , $dataTableID, $type, $display, $group='', $id = null)
+    private function generateBox($tabel, $dataTableID, $type, $display, $group='', $id = null)
     {
         $box = new Widgets\Box(
             $this->setTitle($type, $display, $tabel, $group, $id),
@@ -54,12 +53,11 @@ class TabulasiController extends Controller
      */
     private function generateTable($group, $tabel, $dataTableID, $type, $display, $id = null)
     {
-
         $judul = $this->tableOption($this->setTitle($type, $display, $tabel, $group, $id, false));
         switch ($group) {
             case 'kelompok':
                 if (is_null($id)) {
-                    if ($type == 'main'){
+                    if ($type == 'main') {
                         $data = $this->headerAndQueryMain('Kelompok', $group, $display);
                     } else {
                         $data = $this->headerAndQueryDetail($tabel, 'Kelompok', $group, $display);
@@ -70,7 +68,7 @@ class TabulasiController extends Controller
                     $header = $data[1];
                     $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
                 } else {
-                    if ($type == 'main'){
+                    if ($type == 'main') {
                         $data = $this->headerAndQueryMain('Instansi', 'instansi', $display);
                     } else {
                         $data = $this->headerAndQueryDetail($tabel, 'Instansi', 'instansi', $display);
@@ -85,7 +83,7 @@ class TabulasiController extends Controller
 
             case 'instansi':
             if (is_null($id)) {
-                if ($type == 'main'){
+                if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Instansi', $group, $display);
                 } else {
                     $data = $this->headerAndQueryDetail($tabel, 'Instansi', $group, $display);
@@ -96,7 +94,7 @@ class TabulasiController extends Controller
                 $header = $data[1];
                 $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
-                if ($type == 'main'){
+                if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Layanan', 'layanan', $display);
                 } else {
                     $data = $this->headerAndQueryDetail($tabel, 'Layanan', 'layanan', $display);
@@ -111,7 +109,7 @@ class TabulasiController extends Controller
 
             case 'layanan':
             if (is_null($id)) {
-                if ($type == 'main'){
+                if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Layanan', $group, $display);
                 } else {
                     $data = $this->headerAndQueryDetail($tabel, 'Layanan', $group, $display);
@@ -122,7 +120,7 @@ class TabulasiController extends Controller
                 $header = $data[1];
                 $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
-                if ($type == 'main'){
+                if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Nama', 'sampel', $display);
                 } else {
                     $data = $this->headerAndQueryDetail($tabel, 'Nama', 'sampel', $display);
@@ -136,7 +134,7 @@ class TabulasiController extends Controller
                 break;
 
             default:
-                if ($type == 'main'){
+                if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Kabupaten', $group, $display);
                 } else {
                     $data = $this->headerAndQueryDetail($tabel, 'Kabupaten', $group, $display);
@@ -164,7 +162,7 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function headerAndQueryDetail($model, $preheader, $group, $display)
+    private function headerAndQueryDetail($model, $preheader, $group, $display):array
     {
         $q = '';
         if ($display == 'ikm' && $group !== 'sampel') {
@@ -198,7 +196,7 @@ class TabulasiController extends Controller
         } else {
             $header[] = 'Total';
         }
-        if ($group == ''){
+        if ($group == '') {
             return [$q, $header];
         } else {
             return [$group.'.id AS link, '.$group.'.nama as firstcol,'.$q, $header];
@@ -243,7 +241,7 @@ class TabulasiController extends Controller
             (sum(u1+u2+u3+u4+u5+u6+u7+u8+u9))/(9*count(sampel.id)) as nrrt,
             25*(sum(u1+u2+u3+u4+u5+u6+u7+u8+u9))/(9*count(sampel.id)) as ikm';
         }
-        if ($group == ''){
+        if ($group == '') {
             return [$q, $header];
         } else {
             return [$group.'.id as link, '.$group.'.nama as firstcol,'.$q, $header];
@@ -410,7 +408,7 @@ class TabulasiController extends Controller
             $title .= ' Index';
                 break;
         }
-        if ($group !=''){
+        if ($group !='') {
             $title .= ' menurut ';
             if (is_null($id)) {
                 $title .= ucfirst($group).' (Semua)';

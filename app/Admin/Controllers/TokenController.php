@@ -13,6 +13,7 @@ use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Form;
 use Illuminate\Support\Carbon;
 
 class TokenController extends Controller
@@ -119,5 +120,11 @@ class TokenController extends Controller
         });
 
         return $show;
+    }
+
+    protected function form()
+    {
+        $form = new Form(new Token());
+        return $form;
     }
 }

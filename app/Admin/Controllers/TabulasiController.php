@@ -20,7 +20,7 @@ class TabulasiController extends Controller
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
-        ->row($this->generateBox('Jk', 'satu', 'main', 'sampel', $group, $id));
+        ->row($this->generateBox('', 'satu', 'main', 'ikm', $group, $id));
     }
 
     public function detail(Content $content, $group = '', $id = null)

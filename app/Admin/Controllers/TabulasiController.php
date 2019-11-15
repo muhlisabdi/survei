@@ -16,7 +16,7 @@ use Jxlwqq\DataTable\DataTable;
 
 class TabulasiController extends Controller
 {
-    public function main(Content $content, $table ='all', $group = '', $id = null)
+    public function main(Content $content, $table = 'all', $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
@@ -24,7 +24,7 @@ class TabulasiController extends Controller
         ->row($this->generateBox($table, 'ikm', 'main', 'ikm', $group, $id));
     }
 
-    public function detail(Content $content, $table ='Jk', $group = '', $id = null)
+    public function detail(Content $content, $table = 'Jk', $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
@@ -32,7 +32,7 @@ class TabulasiController extends Controller
         ->row($this->generateBox($table, 'ikm', 'detail', 'ikm', $group, $id));
     }
 
-    private function generateBox($tabel, $dataTableID, $type, $display, $group='', $id = null)
+    private function generateBox($tabel, $dataTableID, $type, $display, $group = '', $id = null)
     {
         $box = new Widgets\Box(
             $this->setTitle($type, $display, $tabel, $group, $id),
@@ -379,7 +379,7 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function tableOption($title= '')
+    private function tableOption($title = '')
     {
         return [
             'buttons'=> [
@@ -412,7 +412,7 @@ class TabulasiController extends Controller
             $title .= ' Index';
                 break;
         }
-        if ($group !='') {
+        if ($group != '') {
             $title .= ' menurut ';
             if (is_null($id)) {
                 $title .= ucfirst($group).' (Semua)';

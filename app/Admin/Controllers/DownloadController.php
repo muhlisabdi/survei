@@ -2,17 +2,17 @@
 
 namespace App\Admin\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Admin\Models\Kelompok;
 use App\Admin\Models\Instansi;
+use App\Admin\Models\Kelompok;
 use App\Admin\Models\Layanan;
+use App\Http\Controllers\Controller;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Widgets\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jxlwqq\DataTable\DataTable;
-use Illuminate\Support\Carbon;
 
 class DownloadController extends Controller
 {
@@ -29,12 +29,10 @@ class DownloadController extends Controller
         )->load('instansi', '/'.config('admin.route.prefix').'/api/instansi');
 
         $form->select('instansi')->options(function ($id) {
-
             return Instansi::where('id', $id)->pluck('nama', 'id');
         })->load('layanan', '/'.config('admin.route.prefix').'/api/layanan');
 
         $form->select('layanan')->options(function ($id) {
-
             return Layanan::where('id', $id)->pluck('nama', 'id');
         });
         $box1 = new Box('Filter', $form);
@@ -65,21 +63,21 @@ class DownloadController extends Controller
                 $this->tableStyle(),
                 $this->tableOption('Daftar Sampel Kelompok '.Kelompok::where('id', $kelompok)->get('nama')[0]->nama),
                 'sampel');
-        }  elseif ($layanan == null) {
+        } elseif ($layanan == null) {
             $table = new DataTable(
                 $this->setHeader(),
                 $this->instansiQuery($instansi),
                 $this->tableStyle(),
                 $this->tableOption('Daftar Sampel '.Instansi::where('id', $instansi)->get('nama')[0]->nama),
                 'sampel');
-            } else {
-                $table = new DataTable(
+        } else {
+            $table = new DataTable(
                     $this->setHeader(),
                     $this->layananQuery($layanan),
                     $this->tableStyle(),
                     $this->tableOption('Daftar Sampel Layanan '.Layanan::where('id', $layanan)->get('nama')[0]->nama),
                     'sampel');
-                }
+        }
 
         return $table;
     }
@@ -87,7 +85,7 @@ class DownloadController extends Controller
     public function instansi(Request $request)
     {
         $kelompokId = $request->get('q');
-        if (!is_null(Kelompok::find($kelompokId))){
+        if (!is_null(Kelompok::find($kelompokId))) {
             return Kelompok::find($kelompokId)->instansi()->get(['instansi.id', DB::raw('nama as text')]);
         } else {
             return [];
@@ -97,7 +95,7 @@ class DownloadController extends Controller
     public function layanan(Request $request)
     {
         $instansiId = $request->get('q');
-        if (!is_null(Instansi::find($instansiId))){
+        if (!is_null(Instansi::find($instansiId))) {
             return Instansi::find($instansiId)->layanan()->get(['layanan.id', DB::raw('nama as text')]);
         } else {
             return [];
@@ -169,10 +167,10 @@ class DownloadController extends Controller
     private function setHeader()
     {
         return ['Kode', 'Nama', 'ID Layanan', 'Tanggal', 'Jam', 'JK', 'Pendidikan', 'Pekerjaan', 'Umur',
-        'U1', 'U2', 'U3', 'U4', 'U5', 'U6', 'U7', 'U8', 'U9'];
+        'U1', 'U2', 'U3', 'U4', 'U5', 'U6', 'U7', 'U8', 'U9', ];
     }
 
-    private function tableOption($title= '')
+    private function tableOption($title = '')
     {
         return [
             'buttons'=> [
@@ -193,5 +191,4 @@ class DownloadController extends Controller
     {
         return ['table-bordered', 'table-hover', 'table-striped'];
     }
-
 }

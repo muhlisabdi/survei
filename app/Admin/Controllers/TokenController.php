@@ -10,10 +10,10 @@ use App\Admin\Models\Layanan;
 use App\Admin\Models\Token;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
+use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use Encore\Admin\Form;
 use Illuminate\Support\Carbon;
 
 class TokenController extends Controller
@@ -125,6 +125,7 @@ class TokenController extends Controller
     protected function form()
     {
         $form = new Form(new Token());
+
         return $form;
     }
 }

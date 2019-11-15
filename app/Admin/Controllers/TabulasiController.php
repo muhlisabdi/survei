@@ -16,18 +16,20 @@ use Jxlwqq\DataTable\DataTable;
 
 class TabulasiController extends Controller
 {
-    public function main(Content $content, $group = '', $id = null)
+    public function main(Content $content, $table ='all', $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
-        ->row($this->generateBox('', 'satu', 'main', 'ikm', $group, $id));
+        ->row($this->generateBox($table, 'sampel', 'main', 'sampel', $group, $id))
+        ->row($this->generateBox($table, 'ikm', 'main', 'ikm', $group, $id));
     }
 
-    public function detail(Content $content, $group = '', $id = null)
+    public function detail(Content $content, $table ='Jk', $group = '', $id = null)
     {
         return $content->header('Tabulasi')
         ->description('Tabulasi Sampel')
-        ->row($this->generateBox('Jk', 'satu', 'detail', 'ikm', $group, $id));
+        ->row($this->generateBox($table, 'sampel', 'detail', 'sampel', $group, $id))
+        ->row($this->generateBox($table, 'ikm', 'detail', 'ikm', $group, $id));
     }
 
     private function generateBox($tabel, $dataTableID, $type, $display, $group='', $id = null)
@@ -37,7 +39,7 @@ class TabulasiController extends Controller
             $this->generateTable($group, $tabel, $dataTableID, $type, $display, $id),
             $this->setFooter()
         );
-        $box->style('success')->collapsable()->removable();
+        $box->collapsable()->removable();
 
         return $box;
     }
@@ -66,7 +68,7 @@ class TabulasiController extends Controller
                                 ->orderBy('kelompok.id', 'asc')
                                 ->get()->toArray();
                     $header = $data[1];
-                    $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
+                    $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
                 } else {
                     if ($type == 'main') {
                         $data = $this->headerAndQueryMain('Instansi', 'instansi', $display);
@@ -77,7 +79,7 @@ class TabulasiController extends Controller
                                 ->orderBy('instansi.id', 'asc')
                                 ->get()->toArray();
                     $header = $data[1];
-                    $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'instansi', $display), $this->tableStyle(), $judul, $dataTableID);
+                    $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, 'instansi', $display), $this->tableStyle(), $judul, $dataTableID);
                 }
                 break;
 
@@ -92,7 +94,7 @@ class TabulasiController extends Controller
                             ->orderBy('instansi.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
                 if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Layanan', 'layanan', $display);
@@ -103,7 +105,7 @@ class TabulasiController extends Controller
                             ->orderBy('layanan.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'layanan', $display), $this->tableStyle(), $judul, $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, 'layanan', $display), $this->tableStyle(), $judul, $dataTableID);
             }
                 break;
 
@@ -118,7 +120,7 @@ class TabulasiController extends Controller
                             ->orderBy('layanan.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, $group, $display), $this->tableStyle(), $judul, $dataTableID);
             } else {
                 if ($type == 'main') {
                     $data = $this->headerAndQueryMain('Nama', 'sampel', $display);
@@ -129,7 +131,7 @@ class TabulasiController extends Controller
                             ->orderBy('sampel.id', 'asc')
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, 'sampel', $display), $this->tableStyle(), $judul, $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, 'sampel', $display), $this->tableStyle(), $judul, $dataTableID);
             }
                 break;
 
@@ -142,7 +144,7 @@ class TabulasiController extends Controller
                 $arrTable = $this->layananQuery($data[0], null)
                             ->get()->toArray();
                 $header = $data[1];
-                $tabel = new DataTable($header, $this->generateRows($type, $arrTable, $group, $display, 'Kabupaten'), $this->tableStyle(), $judul, $dataTableID);
+                $tabel = new DataTable($header, $this->generateRows($type, $tabel, $arrTable, $group, $display, 'Kabupaten'), $this->tableStyle(), $judul, $dataTableID);
 
                 break;
 
@@ -265,11 +267,11 @@ class TabulasiController extends Controller
                 ->join('kelompok', 'kelompok.id', '=', 'instansi_kelompok.kelompok_id')
                 ->selectRaw($qselect);
         if (is_null($id)) {
-            $data->whereRaw('sampel.layanan_id IN(
+            $data->whereRaw('deleted_at IS NULL AND sampel.layanan_id IN(
                 SELECT layanan.id FROM layanan WHERE layanan.instansi_id IN (
                 SELECT instansi_id FROM instansi_kelompok))');
         } else {
-            $data->whereRaw('sampel.layanan_id IN(
+            $data->whereRaw('deleted_at IS NULL AND sampel.layanan_id IN(
                 SELECT layanan.id FROM layanan WHERE layanan.instansi_id IN (
                 SELECT instansi_id FROM instansi_kelompok WHERE instansi_kelompok.kelompok_id ='.$id.'))');
         }
@@ -292,7 +294,9 @@ class TabulasiController extends Controller
                 ->join('instansi', 'layanan.instansi_id', '=', 'instansi.id')
                 ->selectRaw($qselect);
         if (!is_null($id)) {
-            $data->whereRaw('layanan.instansi_id  ='.$id);
+            $data->whereRaw('deleted_at IS NULL AND layanan.instansi_id  ='.$id);
+        } else {
+            $data->whereRaw('deleted_at IS NULL');
         }
 
         return $data;
@@ -308,13 +312,13 @@ class TabulasiController extends Controller
      */
     private function layananQuery($qselect, $id = null)
     {
-        $data = DB::table('sampel')
-                ->join('layanan', 'layanan.id', '=', 'sampel.layanan_id')
-                ->selectRaw($qselect);
+        $data = DB::table('sampel');
+        $data->join('layanan', 'layanan.id', '=', 'sampel.layanan_id')
+                ->selectRaw($qselect)
+                ->whereRaw('deleted_at IS NULL');
         if (!is_null($id)) {
-            $data = DB::table('sampel')
-                ->selectRaw($qselect);
-            $data->whereRaw('sampel.layanan_id  ='.$id);
+            $data->selectRaw($qselect);
+            $data->whereRaw('deleted_at IS NULL AND sampel.layanan_id  ='.$id);
         }
 
         return $data;
@@ -329,7 +333,7 @@ class TabulasiController extends Controller
      *
      * @return void
      */
-    private function generateRows($type, array $arrTable, $group, $display, $kabupaten = '')
+    private function generateRows($type, $tabel, array $arrTable, $group, $display, $kabupaten = '')
     {
         $arrTable = json_decode(json_encode($arrTable, true), true);
         foreach ($arrTable as $arr) {
@@ -353,11 +357,11 @@ class TabulasiController extends Controller
                     $arr['firstcol'] = $this->generateLink("sampel/{$arr['link']}/edit", $arr['firstcol'] ?: 'Anonim');
                     break;
                 case '':
-                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/kelompok", $kabupaten);
+                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/{$tabel}/kelompok", $kabupaten);
                     break;
 
                 default:
-                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/{$group}/{$arr['link']}", $arr['firstcol']);
+                    $arr['firstcol'] = $this->generateLink("tabulasi/{$type}/{$tabel}/{$group}/{$arr['link']}", $arr['firstcol']);
                     break;
             }
             unset($arr['link']);
@@ -418,7 +422,7 @@ class TabulasiController extends Controller
                         if (!$html) {
                             $title .= 'Instansi';
                         } else {
-                            $title .= '<a href="'.admin_url('tabulasi/'.$type.'/instansi').'">Instansi</a>';
+                            $title .= '<a href="'.admin_url('tabulasi/'.$type.'/'.$table.'/instansi').'">Instansi</a>';
                         }
                         $title .= ' (Kelompok '.Kelompok::where('id', $id)->get('nama')->pluck('nama')[0].')';
                         break;
@@ -426,7 +430,7 @@ class TabulasiController extends Controller
                     if (!$html) {
                         $title .= 'Layanan';
                     } else {
-                        $title .= '<a href="'.admin_url('tabulasi/'.$type.'/layanan').'">layanan</a>';
+                        $title .= '<a href="'.admin_url('tabulasi/'.$type.'/'.$table.'/layanan').'">layanan</a>';
                     }
                         $title .= ' ('.Instansi::where('id', $id)->get('nama')->pluck('nama')[0].')';
                         break;
@@ -438,13 +442,13 @@ class TabulasiController extends Controller
             }
         }
         if ($type == 'detail') {
-            $title .= ' berdasarkan';
+            $title .= ' berdasarkan ';
             switch ($table) {
                 case 'Jk':
-                    $title .= ' Jenis Kelamin';
+                    $title .= 'Jenis Kelamin';
                     break;
                 case 'Jam':
-                    $title .= ' Jam Pelayanan';
+                    $title .= 'Jam Pelayanan';
                     break;
                 default:
                     $title .= ucfirst($table);

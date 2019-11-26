@@ -85,7 +85,7 @@ class DownloadController extends Controller
     public function instansi(Request $request)
     {
         $kelompokId = $request->get('q');
-        if (!is_null(Kelompok::find($kelompokId))) {
+        if (! is_null(Kelompok::find($kelompokId))) {
             return Kelompok::find($kelompokId)->instansi()->get(['instansi.id', DB::raw('nama as text')]);
         } else {
             return [];
@@ -95,7 +95,7 @@ class DownloadController extends Controller
     public function layanan(Request $request)
     {
         $instansiId = $request->get('q');
-        if (!is_null(Instansi::find($instansiId))) {
+        if (! is_null(Instansi::find($instansiId))) {
             return Instansi::find($instansiId)->layanan()->get(['layanan.id', DB::raw('nama as text')]);
         } else {
             return [];

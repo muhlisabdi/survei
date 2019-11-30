@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Models\Klasifikasi;
+use App\Admin\Models\Usia;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Carbon;
 
-class KlasifikasiController extends Controller
+class UsiaController extends Controller
 {
     use HasResourceActions;
 
@@ -25,15 +25,15 @@ class KlasifikasiController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Klasifikasi')
-            ->description('Pengaturan Klasifikasi')
+            ->header('Kelompok Usia')
+            ->description('Pengaturan Daftar Kelompok Usia')
             ->body($this->grid());
     }
 
     /**
      * Show interface.
      *
-     * @param mixed   $id
+     * @param mixed $id
      * @param Content $content
      *
      * @return Content
@@ -41,15 +41,15 @@ class KlasifikasiController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('Detail')
-            ->description('Detail Klasifikasi')
+            ->header(trans('admin.detail'))
+            ->description('Detail Kelompok Usia Usia')
             ->body($this->detail($id));
     }
 
     /**
      * Edit interface.
      *
-     * @param mixed   $id
+     * @param mixed $id
      * @param Content $content
      *
      * @return Content
@@ -57,8 +57,8 @@ class KlasifikasiController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Ubah')
-            ->description('Ubah Klasifikasi')
+            ->header(trans('admin.edit'))
+            ->description('Edit Kelompok Usia')
             ->body($this->form()->edit($id));
     }
 
@@ -72,8 +72,8 @@ class KlasifikasiController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Tambah')
-            ->description('Tambah Klasifikasi')
+            ->header(trans('admin.create'))
+            ->description('Tambah Kelompok Usia')
             ->body($this->form());
     }
 
@@ -84,12 +84,10 @@ class KlasifikasiController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Klasifikasi());
+        $grid = new Grid(new Usia());
 
-        $grid->batas('Batas Bawah');
-        $grid->klasifikasi('Klasifikasi')->display(function ($klasifikasi) {
-            return "<span style=\"color:{$this->warna};\">{$klasifikasi}</span>";
-        });
+        $grid->batas_bawah('Batas Bawah')->editable();
+        $grid->kelompok('Kelompok Usia')->editable();
         $grid->disableFilter();
         $grid->disableExport();
 
@@ -105,12 +103,11 @@ class KlasifikasiController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Klasifikasi::findOrFail($id));
+        $show = new Show(Usia::findOrFail($id));
 
-        $show->id('Id');
-        $show->batas('Batas Bawah');
-        $show->klasifikasi('Klasifikasi');
-        $show->warna('Label Warna');
+        $show->id('id');
+        $show->batas_bawah('batas_bawah');
+        $show->kelompok('kelompok');
         $show->created_at(trans('admin.created_at'))->as(function ($created_at) {
             return Carbon::parse($created_at)->translatedFormat('d F Y H:m:s');
         });
@@ -128,13 +125,13 @@ class KlasifikasiController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Klasifikasi());
-        $form->text('batas', 'Batas Bawah')->rules('numeric|required', [
+        $form = new Form(new Usia());
+
+        $form->text('batas_bawah')->rules('numeric|required', [
             'required'=> 'Kode Harus Terisi',
             'numeric' => 'Batas harus berupa angka',
-            ])->help('Gunakan . (titik) sebagai pembatas desimal');
-        $form->text('klasifikasi')->rules('required', ['required'=>'Nama Keterangan Harus Terisi']);
-        $form->color('warna', 'Label Warna');
+            ]);
+        $form->text('kelompok', 'Kelompok Usia')->rules('required', ['required'=>'Nama Kelompok Harus Terisi']);
 
         return $form;
     }

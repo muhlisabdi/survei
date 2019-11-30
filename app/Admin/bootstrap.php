@@ -30,7 +30,7 @@ Grid::init(function (Grid $grid) {
 });
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    $navbar->right(Nav\Shortcut::make([
+    $navbar->left(Nav\Shortcut::make([
         'Sampel'       => 'sampel/create',
         'Kelompok'     => 'kelompok/create',
         'Instansi'     => 'instansi/create',

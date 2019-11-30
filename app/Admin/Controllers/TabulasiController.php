@@ -16,6 +16,13 @@ use Jxlwqq\DataTable\DataTable;
 
 class TabulasiController extends Controller
 {
+    protected $klasifikasi;
+
+    public function __construct()
+    {
+        $this->klasifikasi =Klasifikasi::orderBy('batas', 'desc')->get(['batas', 'klasifikasi', 'warna']);
+    }
+
     public function main(Content $content, $table = 'all', $group = '', $id = null)
     {
         return $content->header('Tabulasi')
@@ -172,18 +179,34 @@ class TabulasiController extends Controller
         } else {
             $header = [$preheader];
         }
-
-        $arr = App("App\Admin\Models\\{$model}")::all(['kode', 'keterangan'])->pluck('keterangan', 'kode');
-        if ($group !== 'sampel') {
-            foreach ($arr as $key => $value) {
-                if ($display == 'ikm') {
-                    $q .= 'count(sampel.id) as jumlah, AVG(CASE WHEN '.$model.'_id='.$key.' THEN u1+u2+u3+u4+u5+u6+u7+u8+u9 END)/9,';
-                } else {
-                    $q .= 'SUM(IF(sampel.'.$model.'_id='.$key.',1,0)),';
+        if ($model !== 'usia') {
+            $arr = App("App\Admin\Models\\{$model}")::all(['kode', 'keterangan'])->pluck('keterangan', 'kode');
+            if ($group !== 'sampel') {
+                foreach ($arr as $key => $value) {
+                    if ($display == 'ikm') {
+                        $q .= 'count(sampel.id) as jumlah, AVG(CASE WHEN '.$model.'_id='.$key.' THEN u1+u2+u3+u4+u5+u6+u7+u8+u9 END)/9,';
+                    } else {
+                        $q .= 'SUM(IF(sampel.'.$model.'_id='.$key.',1,0)),';
+                    }
+                    $header[] = $value;
                 }
-                $header[] = $value;
+                unset($arr);
             }
-            unset($arr);
+        } else {
+            $arr = App("App\Admin\Models\\{$model}")::orderBy('batas_bawah', 'desc')->get(['batas_bawah', 'kelompok'])->pluck('kelompok', 'batas_bawah');
+            if ($group !== 'sampel') {
+                $ubound = 130;
+                foreach ($arr as $key => $value) {
+                    if ($display == 'ikm') {
+                        $q .= 'count(sampel.id) as jumlah, AVG(CASE WHEN umur >'.$key.' and umur <= '.$ubound.' THEN u1+u2+u3+u4+u5+u6+u7+u8+u9 END)/9,';
+                    } else {
+                        $q .= 'SUM(IF(sampel.umur >'.$key.' and umur <= '.$ubound.',1,0)),';
+                    }
+                    $ubound = $key;
+                    $header[] = $value;
+                }
+                unset($arr);
+            }
         }
         if ($display == 'ikm') {
             $q .= 'AVG(u1+u2+u3+u4+u5+u6+u7+u8+u9)/9 AS nrrt, ';
@@ -444,10 +467,10 @@ class TabulasiController extends Controller
         if ($type == 'detail') {
             $title .= ' berdasarkan ';
             switch ($table) {
-                case 'Jk':
+                case 'jk':
                     $title .= 'Jenis Kelamin';
                     break;
-                case 'Jam':
+                case 'jam':
                     $title .= 'Jam Pelayanan';
                     break;
                 default:
@@ -481,9 +504,9 @@ class TabulasiController extends Controller
      */
     private function setWarna($batasBawah, $text)
     {
-        $warna = Klasifikasi::where('batas', '<=', $batasBawah)->orderBy('batas', 'desc')->first('warna')->warna;
+        $warna = $this->klasifikasi->firstWhere('batas', '<=', $batasBawah);
 
-        return "<span style=\"color:{$warna};\">{$text}</span>";
+        return "<span style=\"color:{$warna['warna']};\">{$text}</span>";
     }
 
     /**
@@ -496,7 +519,9 @@ class TabulasiController extends Controller
      */
     private function setKlasifikasi($batasBawah)
     {
-        return Klasifikasi::where('batas', '<=', $batasBawah)->orderBy('batas', 'desc')->first('klasifikasi')->klasifikasi;
+        $klas = $this->klasifikasi->firstWhere('batas', '<=', $batasBawah);
+
+        return $klas['klasifikasi'];
     }
 
     private function generateLink($link, $text)

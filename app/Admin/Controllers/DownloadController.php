@@ -18,9 +18,11 @@ class DownloadController extends Controller
 {
     public function index(Request $request, Content $content)
     {
-        $content->title('Cascading select');
+        $content->title('Unduh Sampel');
+        $content->description('Unduh Sampel');
 
         $form = new Form($request->all());
+        $form->disableReset();
         $form->method('GET');
         $form->action('/'.config('admin.route.prefix').'/download');
 
@@ -80,26 +82,6 @@ class DownloadController extends Controller
         }
 
         return $table;
-    }
-
-    public function instansi(Request $request)
-    {
-        $kelompokId = $request->get('q');
-        if (!is_null(Kelompok::find($kelompokId))) {
-            return Kelompok::find($kelompokId)->instansi()->get(['instansi.id', DB::raw('nama as text')]);
-        } else {
-            return [];
-        }
-    }
-
-    public function layanan(Request $request)
-    {
-        $instansiId = $request->get('q');
-        if (!is_null(Instansi::find($instansiId))) {
-            return Instansi::find($instansiId)->layanan()->get(['layanan.id', DB::raw('nama as text')]);
-        } else {
-            return [];
-        }
     }
 
     private function allQuery()

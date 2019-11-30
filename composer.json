@@ -25,13 +25,15 @@
     "require": {
         "php": "^7.2",
         "encore/laravel-admin": "dev-master",
-        "jxlwqq/data-table": "dev-master",
         "fideloper/proxy": "^4.0",
+        "jxlwqq/data-table": "dev-master",
         "laravel-admin-ext/helpers": "dev-master",
         "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "staudenmeir/belongs-to-through": "2.7"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",

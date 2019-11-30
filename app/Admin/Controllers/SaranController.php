@@ -51,19 +51,17 @@ class SaranController extends Controller
 
             return $nama;
         })->sortable();
-        $grid->layanan()->instansi_id('Instansi')->display(function ($instansi_id) {
-            return Instansi::where('id', $instansi_id)->get('nama')->pluck('nama')[0];
-        })->sortable();
+        $grid->instansi()->nama('Instansi');
         $grid->layanan()->nama('Unit Layanan')->sortable();
         $grid->filter(function ($filter) {
-            $filter->equal('layanan.id', 'Unit Layanan')->select(function ($layanans) {
-                $layanans = Layanan::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
-                foreach ($layanans as $key => $value) {
-                    $layanans[$key] = $value.' ('.Instansi::where('id', Layanan::where('id', $key)->get('instansi_id')->pluck('instansi_id')[0])
-                        ->pluck('nama')[0].')';
-                }
+            $filter->equal('layanan.instansi_id', 'Instansi')->select(function () {
 
-                return $layanans;
+                return Instansi::all(['nama', 'id'])->pluck('nama', 'id')->toArray();
+            })->load('layanan.id', 'api/layanan');
+
+            $filter->equal('layanan.id', 'Layanan')->select(function ($id) {
+
+                return Layanan::where('id', $id)->pluck('nama', 'id')->toArray();
             });
             $filter->between('tanggal', 'Tanggal')->date();
         });

@@ -57,28 +57,32 @@ class DownloadController extends Controller
                 $this->allQuery(),
                 $this->tableStyle(),
                 $this->tableOption('Daftar Semua Sampel'),
-                'sampel');
+                'sampel'
+            );
         } elseif ($instansi == null) {
             $table = new DataTable(
                 $this->setHeader(),
                 $this->kelompokQuery($kelompok),
                 $this->tableStyle(),
                 $this->tableOption('Daftar Sampel Kelompok '.Kelompok::where('id', $kelompok)->get('nama')[0]->nama),
-                'sampel');
+                'sampel'
+            );
         } elseif ($layanan == null) {
             $table = new DataTable(
                 $this->setHeader(),
                 $this->instansiQuery($instansi),
                 $this->tableStyle(),
                 $this->tableOption('Daftar Sampel '.Instansi::where('id', $instansi)->get('nama')[0]->nama),
-                'sampel');
+                'sampel'
+            );
         } else {
             $table = new DataTable(
-                    $this->setHeader(),
-                    $this->layananQuery($layanan),
-                    $this->tableStyle(),
-                    $this->tableOption('Daftar Sampel Layanan '.Layanan::where('id', $layanan)->get('nama')[0]->nama),
-                    'sampel');
+                $this->setHeader(),
+                $this->layananQuery($layanan),
+                $this->tableStyle(),
+                $this->tableOption('Daftar Sampel Layanan '.Layanan::where('id', $layanan)->get('nama')[0]->nama),
+                'sampel'
+            );
         }
 
         return $table;

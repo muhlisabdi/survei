@@ -316,7 +316,7 @@ class TabulasiController extends Controller
                 ->join('layanan', 'layanan.id', '=', 'sampel.layanan_id')
                 ->join('instansi', 'layanan.instansi_id', '=', 'instansi.id')
                 ->selectRaw($qselect);
-        if (!is_null($id)) {
+        if (! is_null($id)) {
             $data->whereRaw('deleted_at IS NULL AND layanan.instansi_id  ='.$id);
         } else {
             $data->whereRaw('deleted_at IS NULL');
@@ -339,7 +339,7 @@ class TabulasiController extends Controller
         $data->join('layanan', 'layanan.id', '=', 'sampel.layanan_id')
                 ->selectRaw($qselect)
                 ->whereRaw('deleted_at IS NULL');
-        if (!is_null($id)) {
+        if (! is_null($id)) {
             $data->selectRaw($qselect);
             $data->whereRaw('deleted_at IS NULL AND sampel.layanan_id  ='.$id);
         }
@@ -442,7 +442,7 @@ class TabulasiController extends Controller
             } else {
                 switch ($group) {
                     case 'kelompok':
-                        if (!$html) {
+                        if (! $html) {
                             $title .= 'Instansi';
                         } else {
                             $title .= '<a href="'.admin_url('tabulasi/'.$type.'/'.$table.'/instansi').'">Instansi</a>';
@@ -450,7 +450,7 @@ class TabulasiController extends Controller
                         $title .= ' (Kelompok '.Kelompok::where('id', $id)->get('nama')->pluck('nama')[0].')';
                         break;
                     case 'instansi':
-                    if (!$html) {
+                    if (! $html) {
                         $title .= 'Layanan';
                     } else {
                         $title .= '<a href="'.admin_url('tabulasi/'.$type.'/'.$table.'/layanan').'">layanan</a>';

@@ -28,16 +28,4 @@ Grid::init(function (Grid $grid) {
         $filter->disableIdFilter();
     });
 });
-
-Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    $navbar->left(Nav\Shortcut::make([
-        'Sampel'       => 'sampel/create',
-        'Kelompok'     => 'kelompok/create',
-        'Instansi'     => 'instansi/create',
-        'Unit Layanan' => 'layanan/create',
-        'Pengguna'     => 'auth/users/create',
-        'Token'        => 'token',
-    ], 'fa-plus')->title('Tambah'));
-});
-
 Encore\Admin\Form::forget(['map', 'editor']);

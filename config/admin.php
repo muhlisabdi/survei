@@ -405,7 +405,7 @@ return [
                 'searching'    => true,
                 'ordering'     => true,
                 'info'         => true,
-                'responsive'   => true,
+                'responsive'   => false,
                 'dom'          => 'Bfrtip',
                 'fixedHeader'  => true,
                 'language'     => 'Indonesian',
